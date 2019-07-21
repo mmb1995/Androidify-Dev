@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#E50914</color>
+    <color name="colorPrimaryLight">#484848</color>
+    <color name="colorSurface">#121212</color>
+    <color name="textPrimary">#ffffff</color>
+    <color name="textBold">#FFFFFF</color>
+    <color name="textSecondary">#D3D3D3</color>
+    <color name="rippleColor">#212121</color>
+    <color name="scrimStart">#CC000000</color>
+    <color name="scrimCenter">#66000000</color>
+    <color name="scrimEnd">@color/colorPrimaryLight</color>
+</resources>
+
+<!--
+#66000000
+CC515116
+!-->

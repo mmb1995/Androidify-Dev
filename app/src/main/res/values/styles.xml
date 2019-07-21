@@ -1,0 +1,47 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="ArtistTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:elevation">3dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="ButtonStyle" parent="TextAppearance.AppCompat">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/default_padding</item>
+    </style>
+
+    <style name="TopHistoryTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:maxWidth">145dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TopHistoryTextStyle.Secondary">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TopHistoryListStyle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+</resources>

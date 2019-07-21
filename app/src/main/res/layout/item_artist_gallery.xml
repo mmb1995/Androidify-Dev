@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginStart="@dimen/default_margin"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:foreground="@drawable/ripple">
+
+    <ImageView
+        android:id="@+id/artist_cover_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:elevation="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/artist_scrim_text_view"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:elevation="1dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/artist_cover_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/scrim"
+        android:textColor="@color/textBold"
+        android:textSize="14sp"/>
+
+
+</android.support.constraint.ConstraintLayout>

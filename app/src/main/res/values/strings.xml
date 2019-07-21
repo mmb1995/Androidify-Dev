@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">androidify</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="artist_tracks_tab_label">Popular</string>
+    <string name="artist_related_tab_label">Related Artists</string>
+</resources>
