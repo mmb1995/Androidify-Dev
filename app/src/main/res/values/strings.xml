@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">androidify</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="artist_tracks_tab_label">Popular</string>
     <string name="artist_related_tab_label">Related Artists</string>
+    <string name="artist_followed_message">Now following artist!</string>
+    <string name="artist_unfollowed_message">Unfollowed artist!</string>
+    <string name="artist_follow_error">Failed to follow artist</string>
+    <string name="artist_unfollow_undo">Undo</string>
+    <string name="now_playing_seekbar_default_text">0:00</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

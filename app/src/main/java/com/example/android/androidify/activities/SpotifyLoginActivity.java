@@ -3,7 +3,6 @@ package com.example.android.androidify.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +19,7 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
@@ -73,6 +73,7 @@ public class SpotifyLoginActivity extends AppCompatActivity implements HasActivi
                 "user-read-private",
                 "user-read-recently-played",
                 "user-library-read",
+                "user-library-modify",
                 "user-follow-read",
                 "user-follow-modify"
         });

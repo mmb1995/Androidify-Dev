@@ -1,35 +1,38 @@
 package com.example.android.androidify.fragments;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.adapter.MusicListAdapter;
-import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
+import com.example.android.androidify.api.ApiResponse;
+import com.example.android.androidify.interfaces.ListItemClickListener;
 import com.example.android.androidify.model.MusicListItem;
 import com.example.android.androidify.utils.Constants;
-import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
-import com.example.android.androidify.viewmodel.MusicPlaybackViewModel;
+import com.example.android.androidify.viewmodel.MainActivityViewModel;
+import com.example.android.androidify.viewmodel.TrackListViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 
 
-public class TrackListFragment extends Fragment implements MusicPlaybackClickListener {
+public class TrackListFragment extends Fragment implements ListItemClickListener {
     private static final String TAG = "TRACK_LIST_FRAG";
 
     //private static final String ARG_MUSIC_LIST = "music_list";
@@ -39,12 +42,16 @@ public class TrackListFragment extends Fragment implements MusicPlaybackClickLis
     @BindView(R.id.track_list_rv)
     RecyclerView mMusicListRecyclerView;
 
+    @BindView(R.id.track_list_progress_bar)
+    ProgressBar mProgressBar;
+
     @Inject
     FactoryViewModel mFactoryModel;
 
     private MusicListAdapter mAdapter;
-    private ArrayList<MusicListItem> mItems;
-    private MusicPlaybackViewModel mMusicPlaybackViewModel;
+    private List<MusicListItem> mItems;
+    private MainActivityViewModel mMainViewModel;
+    private TrackListViewModel mTrackViewModel;
     private String mId;
     private String mType;
 
@@ -88,17 +95,31 @@ public class TrackListFragment extends Fragment implements MusicPlaybackClickLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AndroidSupportInjection.inject(this);
-        mMusicPlaybackViewModel = ViewModelProviders.of(getActivity()).get(MusicPlaybackViewModel.class);
+        mMainViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
+        mTrackViewModel = ViewModelProviders.of(this, mFactoryModel).get(TrackListViewModel.class);
         getTracks();
     }
 
     private void getTracks() {
         switch (this.mType) {
             case Constants.ARTIST:
-                ArtistViewModel model = ViewModelProviders.of(this, mFactoryModel).get(ArtistViewModel.class);
-                model.getArtistTopTracks(mId).observe(this, (ArrayList<MusicListItem> topTracks) -> {
-                    if (topTracks != null) {
-                        this.mAdapter.setItems(topTracks);
+                mTrackViewModel.getTracks(mId, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                    switch (response.status) {
+                        case LOADING:
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            break;
+                        case ERROR:
+                            mProgressBar.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(), "Failed to load tracks", Toast.LENGTH_SHORT).show();
+                            break;
+                        case SUCCESS:
+                            mProgressBar.setVisibility(View.GONE);
+                            this.mItems = response.data;
+                            this.mAdapter.setItems(mItems);
+                            getTracksSavedStatus(mItems);
+                            break;
+                        default:
+                            break;
                     }
                 });
                 break;
@@ -107,121 +128,65 @@ public class TrackListFragment extends Fragment implements MusicPlaybackClickLis
         }
     }
 
-    @Override
-    public void onItemClicked(int position) {
-        MusicListItem item = this.mAdapter.getItemAtPosition(position);
-        if (item != null) {
-            String uri = item.uri;
-            mMusicPlaybackViewModel.setCurrentlyPlaying(uri);
-        }
-    }
-
-
-
-    /**
-    public static TrackListFragment newInstance(ArrayList<Track> tracks) {
-        TrackListFragment fragment = new TrackListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_TRACK_LIST, tracks);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mTracks = getArguments().getParcelableArrayList(ARG_TRACK_LIST);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_track_list, container, false);
-        ButterKnife.bind(this, rootView);
-        displayTrackList();
-        return rootView;
-    }
-
-
-    private void displayTrackList() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        mMusicListRecyclerView.setLayoutManager(manager);
-        this.mAdapter = new TrackListAdapter(getContext(), mTracks);
-        this.mMusicListRecyclerView.setAdapter(mAdapter);
-    }
-
-    /**
-    private void configureViewModel() {
-        this.mViewModel = ViewModelProviders.of(this, mFactoryViewModel).get(UserLibraryViewModel.class);
-        mViewModel.getSavedTracks().observe(this, response -> {
-            Log.i(TAG, "Received response");
-            if (response != null) {
-                this.mAdapter.setItems(response);
+    private void getTracksSavedStatus(List<MusicListItem> tracks) {
+        mTrackViewModel.checkTracks().observe(this, (ApiResponse<Boolean[]> response) -> {
+            switch (response.status) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    updateLikeStatus(response.data);
+                    break;
+                case ERROR:
+                    break;
             }
         });
     }
-     **/
 
+    private void updateLikeStatus(Boolean[] likedTracks) {
+        for (int i = 0; i < likedTracks.length; i++) {
+           MusicListItem track = mItems.get(i);
+           track.isLiked = likedTracks[i];
+        }
+        this.mAdapter.notifyDataSetChanged();
+    }
 
-    /**
+    @Override
+    public void onItemSelected(int position) {
+        MusicListItem item = this.mAdapter.getItemAtPosition(position);
+        if (item != null) {
+            String uri = item.uri;
+            mMainViewModel.setCurrentlyPlaying(uri);
+        }
+    }
 
-     public static TrackListFragment newInstance(ArrayList<MusicListItem> items, String type) {
-     TrackListFragment fragment = new TrackListFragment();
-     Bundle args = new Bundle();
-     args.putParcelableArrayList(ARG_MUSIC_LIST, items);
-     args.putString(ARG_MUSIC_TYPE, type);
-     fragment.setArguments(args);
-     return fragment;
-     }
+    @Override
+    public void onLikeClicked(int position) {
+        MusicListItem item = this.mAdapter.getItemAtPosition(position);
+        if (item.isLiked) {
+            mTrackViewModel.removeTrack(item.id).observe(this, (ApiResponse<Void> response) -> {
+                handleLikeAction(item, position, response);
+            });
+        } else {
+            mTrackViewModel.saveTrack(item.id).observe(this, (ApiResponse<Void> response) -> {
+                handleLikeAction(item, position, response);
+            });
+        }
+    }
 
-
-     @Override
-     public void onCreate(Bundle savedInstanceState) {
-     super.onCreate(savedInstanceState);
-     if (getArguments() != null) {
-     mItems = getArguments().getParcelableArrayList(ARG_MUSIC_LIST);
-     mType = getArguments().getString(ARG_MUSIC_TYPE);
-     }
-     }
-
-     @Override
-     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-     View rootView = inflater.inflate(R.layout.fragment_track_list, container, false);
-     ButterKnife.bind(this, rootView);
-     displayMusicItems();
-     return rootView;
-     }
-
-     @Override
-     public void onActivityCreated(Bundle savedInstanceState) {
-     super.onActivityCreated(savedInstanceState);
-     AndroidSupportInjection.inject(this);
-     mMusicPlaybackViewModel = ViewModelProviders.of(getActivity()).get(MusicPlaybackViewModel.class);
-     displayMusicItems();
-     }
-
-
-     private void displayMusicItems() {
-     LinearLayoutManager manager = new LinearLayoutManager(getContext());
-     mMusicListRecyclerView.setLayoutManager(manager);
-     this.mAdapter = new MusicListAdapter(getContext(), this, mType, mItems);
-     this.mMusicListRecyclerView.setAdapter(mAdapter);
-     }
-
-     @Override
-     public void onItemClicked(int position) {
-     MusicListItem item = this.mAdapter.getItemAtPosition(position);
-     Log.i(TAG, item.name);
-     if (item != null) {
-     String uri = item.uri;
-     mMusicPlaybackViewModel.setCurrentlyPlaying(uri);
-     }
-     }
-
-     **/
-
+    private void handleLikeAction(MusicListItem item, int position, ApiResponse<Void> response) {
+        Log.i(TAG, "handle like click");
+        switch (response.status) {
+            case LOADING:
+                break;
+            case SUCCESS:
+                Log.i(TAG, "liked before = " + item.isLiked);
+                item.isLiked = !item.isLiked;
+                Log.i(TAG, "liked after = " + item.isLiked);
+                this.mAdapter.notifyItemChanged(position);
+                break;
+            case ERROR:
+                Log.e(TAG, "Failed");
+                break;
+        }
+    }
 }

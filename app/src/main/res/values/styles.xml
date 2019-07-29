@@ -1,16 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/textPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+    </style>
+
+    <style name="NowPlayingBarStyle" parent="Theme.MaterialComponents">
+        <item name="enforceTextAppearance">true</item>
+        <item name="enforceMaterialTheme">true</item>
+        <item name="android:background">@color/colorSurface</item>
     </style>
 
     <style name="ArtistTextStyle" parent="TextAppearance.AppCompat">
-        <item name="android:elevation">3dp</item>
+        <item name="android:elevation">4dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:alpha">1</item>
     </style>
@@ -44,4 +51,43 @@
         <item name="android:layout_marginEnd">8dp</item>
     </style>
 
+    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_gravity">center</item>
+    </style>
+    
+    <style name="NowPlayingIconButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="iconTint">@color/now_playing_icon_color_selector</item>
+        <item name="rippleColor">@color/now_playing_button_ripple_color</item>
+    </style>
+
+    <style name="NowPlayingSelectableButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/now_playing_selectable_image_button_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/default_padding</item>
+    </style>
+
+    <style name="NowPlayingTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:text">@string/now_playing_seekbar_default_text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:alpha">@dimen/mtrl_emphasis_high_type</item>
+    </style>
+
 </resources>
+
+<!--
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorOnBackground">@color/textBold</item>
+        <item name="colorOnSurface">@color/textBold</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorSurface</item>
+        <item name="colorSurface">@color/colorSurface</item>
+!-->

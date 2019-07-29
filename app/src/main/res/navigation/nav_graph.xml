@@ -26,4 +26,28 @@
 
     </fragment>
 
+    <action
+        android:id="@+id/global_nav_to_artist"
+        app:destination="@id/artist_fragment"/>
+
+
 </navigation>
+
+<!--
+    <fragment
+        android:id="@+id/top_history_list_fragment"
+        android:name="com.example.android.androidify.fragments.TopHistoryListFragment">
+        <action
+            android:id="@+id/top_history_to_artist"
+            app:destination="@id/artist_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/artist_gallery_fragment"
+        android:name="com.example.android.androidify.fragments.ArtistGalleryFragment"
+        tools:layout="@layout/fragment_artist_gallery">
+        <action
+            android:id="@+id/artist_gallery_to_new_artist"
+            app:destination="@id/artist_fragment"/>
+    </fragment>
+!-->

@@ -1,10 +1,10 @@
 package com.example.android.androidify.api;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +27,7 @@ public abstract class SpotifyApiResource<RequestType, ResultType> {
                     Log.i(TAG, response.message());
                     result.setValue(ApiResponse.success(processResponse(response.body())));
                 } else {
+                    Log.e(TAG, response.message());
                     onFailure(call, new Throwable(response.message()));
                 }
             }

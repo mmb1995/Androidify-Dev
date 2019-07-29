@@ -1,26 +1,30 @@
 package com.example.android.androidify.fragments;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.adapter.ArtistGalleryAdapter;
+import com.example.android.androidify.api.ApiResponse;
+import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
 import com.example.android.androidify.model.MusicListItem;
 import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
+import com.example.android.androidify.viewmodel.MainActivityViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
@@ -28,7 +32,7 @@ import dagger.android.support.AndroidSupportInjection;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ArtistGalleryFragment extends Fragment {
+public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClickListener {
     private static final String TAG = "ARTIST_GALLERY";
 
     private static final String ARG_ARTIST_ID = "arg_artist_id";
@@ -41,7 +45,7 @@ public class ArtistGalleryFragment extends Fragment {
 
     private ArtistGalleryAdapter mAdapter;
     private String mArtistId;
-
+    private MainActivityViewModel mViewModel;
 
     public ArtistGalleryFragment() {
         // Required empty public constructor
@@ -54,6 +58,7 @@ public class ArtistGalleryFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,7 @@ public class ArtistGalleryFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
         this.mArtistGalleryRv.setLayoutManager(manager);
-        this.mAdapter = new ArtistGalleryAdapter(getContext());
+        this.mAdapter = new ArtistGalleryAdapter(getContext(), this);
         this.mArtistGalleryRv.setAdapter(mAdapter);
         return rootView;
     }
@@ -80,15 +85,35 @@ public class ArtistGalleryFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AndroidSupportInjection.inject(this);
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
         getRelatedArtists();
     }
 
     private void getRelatedArtists() {
         ArtistViewModel model = ViewModelProviders.of(this, mFactoryModel).get(ArtistViewModel.class);
-        model.getRelatedArtists(mArtistId).observe(this, (ArrayList<MusicListItem> relatedArtists) -> {
-            if (relatedArtists != null) {
-                this.mAdapter.setItems(relatedArtists);
+        model.getRelatedArtists(mArtistId).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+            if (response != null) {
+                switch (response.status) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        this.mAdapter.setItems(response.data);
+                        break;
+                    case ERROR:
+                        break;
+                    default:
+                        break;
+                }
             }
         });
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        MusicListItem item = mAdapter.getItemAtPosition(position);
+        Log.i(TAG, item.name);
+        if (item != null) {
+            mViewModel.setCurrentArtistId(item.id);
+        }
     }
 }

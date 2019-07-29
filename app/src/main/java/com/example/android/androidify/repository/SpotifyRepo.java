@@ -1,8 +1,5 @@
 package com.example.android.androidify.repository;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.androidify.api.ApiResponse;
@@ -21,6 +18,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,77 +52,39 @@ public class SpotifyRepo {
         return data;
     }
 
-    /**
-    public LiveData<ArrayList<Track>> getTopTracksByArtist(String id) {
-        final MutableLiveData<ArrayList<Track>> data = new MutableLiveData<>();
-        apiService.getArtistTopTracks(id).enqueue(new Callback<ArtistTrackWrapper>() {
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getTopTracksByArtist(String id) {
+        return new SpotifyApiResource<ArtistTrackWrapper, List<MusicListItem>>() {
             @Override
-            public void onResponse(Call<ArtistTrackWrapper> call, Response<ArtistTrackWrapper> response) {
-                Log.i(TAG, "" + response);
-                if (response.body() == null) {
-                    data.setValue(null);
-                } else {
-                    data.setValue(response.body().tracks);
-                }
+            protected Call<ArtistTrackWrapper> createCall() {
+                return apiService.getArtistTopTracks(id);
             }
 
             @Override
-            public void onFailure(Call<ArtistTrackWrapper> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
+            protected List<MusicListItem> processResponse(@Nullable ArtistTrackWrapper data) {
+                List<MusicListItem> items = parseTracks(data.tracks);
+                return items;
             }
-        });
-        return data;
-    }
-     **/
-
-    public LiveData<ArrayList<MusicListItem>> getTopTracksByArtist(String id) {
-        final MutableLiveData<ArrayList<MusicListItem>> data = new MutableLiveData<>();
-        apiService.getArtistTopTracks(id).enqueue(new Callback<ArtistTrackWrapper>() {
-            @Override
-            public void onResponse(Call<ArtistTrackWrapper> call, Response<ArtistTrackWrapper> response) {
-                if (response.isSuccessful()) {
-                    List<Track> tracks = response.body().tracks;
-                    ArrayList<MusicListItem> items = parseTracks(tracks);
-                    Log.i(TAG, items.get(0).name);
-                    data.setValue(items);
-                } else {
-                    onFailure(call, new Throwable(response.message()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArtistTrackWrapper> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-            }
-        });
-
-        return data;
+        }.getAsLiveData();
     }
 
-    public LiveData<ArrayList<MusicListItem>> getRelatedArtists(String id) {
-        final MutableLiveData<ArrayList<MusicListItem>> data = new MutableLiveData<>();
-        apiService.getRelatedArtists(id).enqueue(new Callback<RelatedArtistsWrapper>() {
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getRelatedArtists(String id) {
+        return new SpotifyApiResource<RelatedArtistsWrapper, List<MusicListItem>>() {
             @Override
-            public void onResponse(Call<RelatedArtistsWrapper> call, Response<RelatedArtistsWrapper> response) {
-                if (response.isSuccessful()) {
-                    List<Artist> artists = response.body().artists;
-                    ArrayList<MusicListItem> items = parseArtists(artists);
-                    data.setValue(items);
-                } else {
-                    onFailure(call, new Throwable(response.message()));
-                }
+            protected Call<RelatedArtistsWrapper> createCall() {
+                return apiService.getRelatedArtists(id);
             }
 
             @Override
-            public void onFailure(Call<RelatedArtistsWrapper> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
+            protected List<MusicListItem> processResponse(@Nullable RelatedArtistsWrapper data) {
+                List<MusicListItem> items = parseArtists(data.artists);
+                return items;
             }
-        });
-
-        return data;
+        }.getAsLiveData();
     }
 
-    public LiveData<Boolean> isFollowingArtist(String id) {
+    public MutableLiveData<Boolean> isFollowingArtist(String id) {
         final MutableLiveData<Boolean> data = new MutableLiveData<>();
         apiService.isFollowingArtist(id).enqueue(new Callback<Boolean[]>() {
             @Override
@@ -142,11 +104,54 @@ public class SpotifyRepo {
         return data;
     }
 
-    public LiveData<ApiResponse<Void>> followArtist(String id) {
+    public LiveData<ApiResponse<java.lang.Void>> followArtist(String id) {
+        return new SpotifyApiResource<java.lang.Void, java.lang.Void>() {
+            @Override
+            protected Call<java.lang.Void> createCall() {
+                return apiService.followArtist(id);
+            }
+
+            @Override
+            protected java.lang.Void processResponse(@Nullable java.lang.Void data) {
+                return data;
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<ApiResponse<java.lang.Void>> unfollowArtist(String id) {
+        return new SpotifyApiResource<java.lang.Void, java.lang.Void>() {
+            @Override
+            protected Call<java.lang.Void> createCall() { return  apiService.unfollowArtist(id); }
+
+            @Override
+            protected java.lang.Void processResponse(@Nullable java.lang.Void data) {
+                return data;
+            }
+        }.getAsLiveData();
+    }
+
+    /** Track endpoints **/
+
+    public LiveData<ApiResponse<Boolean[]>> containsTracks(List<MusicListItem> tracks) {
+        String ids = getIdList(tracks);
+        return new SpotifyApiResource<Boolean[], Boolean[]>() {
+            @Override
+            protected Call<Boolean[]> createCall() {
+                return apiService.containsTrack(ids);
+            }
+
+            @Override
+            protected Boolean[] processResponse(@Nullable Boolean[] data) {
+                return data;
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<ApiResponse<Void>> saveTrack(String id) {
         return new SpotifyApiResource<Void, Void>() {
             @Override
             protected Call<Void> createCall() {
-                return apiService.followArtist(id);
+                return apiService.saveTracks(id);
             }
 
             @Override
@@ -155,6 +160,21 @@ public class SpotifyRepo {
             }
         }.getAsLiveData();
     }
+
+    public LiveData<ApiResponse<java.lang.Void>> removeTrack(String id) {
+        return new SpotifyApiResource<Void, Void>() {
+            @Override
+            protected Call<Void> createCall() {
+                return apiService.removeTracks(id);
+            }
+
+            @Override
+            protected Void processResponse(@Nullable Void data) {
+                return data;
+            }
+        }.getAsLiveData();
+    }
+
 
 
     /** Top history endpoints **/
@@ -230,6 +250,8 @@ public class SpotifyRepo {
         return data;
     }
 
+    /** helpers **/
+
     private List<Track> parseTracks(Pager<TrackWrapper> trackPager) {
         List<Track> tracks = new ArrayList<>();
         for (TrackWrapper trackWrapper : trackPager.items) {
@@ -240,7 +262,7 @@ public class SpotifyRepo {
         return tracks;
     }
 
-    private ArrayList<MusicListItem> parseTracks(List<Track> tracks) {
+    private List<MusicListItem> parseTracks(List<Track> tracks) {
         ArrayList<MusicListItem> tracksList = new ArrayList<>();
 
         for (Track track: tracks) {
@@ -250,7 +272,7 @@ public class SpotifyRepo {
         return tracksList;
     }
 
-    private ArrayList<MusicListItem> parseArtists(List<Artist> artists) {
+    private List<MusicListItem> parseArtists(List<Artist> artists) {
         ArrayList<MusicListItem> artistsList = new ArrayList<>();
 
         for (Artist artist: artists) {
@@ -258,6 +280,17 @@ public class SpotifyRepo {
             artistsList.add(item);
         }
         return artistsList;
+    }
+
+    private String getIdList(List<MusicListItem> items) {
+        StringBuilder builder = new StringBuilder(items.size() + items.size() - 1);
+        for (int i = 0; i < items.size() - 1; i++) {
+            MusicListItem item = items.get(i);
+            builder.append(item.id + ",");
+        }
+        builder.append(items.get(items.size() - 1).id);
+        Log.i(TAG, builder.toString());
+        return builder.toString();
     }
 
 

@@ -15,6 +15,9 @@ public class MusicListItem implements Parcelable {
     public String id;
     public String uri;
     public String artistName;
+    public boolean isLiked;
+
+    public MusicListItem() {}
 
     public MusicListItem(Track track) {
         this.name = track.name;
