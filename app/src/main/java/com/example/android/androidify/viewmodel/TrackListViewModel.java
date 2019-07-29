@@ -21,15 +21,24 @@ public class TrackListViewModel extends ViewModel {
     public TrackListViewModel(SpotifyRepo repo) { this.mRepo = repo; }
 
     public LiveData<ApiResponse<List<MusicListItem>>> getTracks(String id, String type) {
-        if (type.equals(Constants.ARTIST)) {
-            if (mTracks == null) {
-                mTracks = mRepo.getTopTracksByArtist(id);
-            }
+        if (mTracks != null) {
             return mTracks;
-        } else {
-            return null;
         }
+
+        switch (type) {
+            case Constants.ARTIST:
+                mTracks = mRepo.getTopTracksByArtist(id);
+                break;
+            case Constants.RECENTLY_PLAYED:
+                mTracks = mRepo.getRecentlyPlayedTracks();
+                break;
+            case Constants.TOP_TRACKS:
+                mTracks = mRepo.getUserTopTracks();
+                break;
+        }
+        return mTracks;
     }
+
 
     public LiveData<ApiResponse<Boolean[]>> checkTracks() {
         return mRepo.containsTracks(mTracks.getValue().data);

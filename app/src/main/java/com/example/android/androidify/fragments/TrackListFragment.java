@@ -62,6 +62,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
 
     public static TrackListFragment newInstance(String id, String type) {
         TrackListFragment fragment = new TrackListFragment();
+        Log.i(TAG, "Creating new TrackListFragment");
         Bundle args = new Bundle();
         args.putString(ARG_ID, id);
         args.putString(ARG_MUSIC_TYPE, type);
@@ -73,7 +74,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mId = getArguments().getString(ARG_ID);
+            mId = getArguments().getString(ARG_ID, null);
             mType = getArguments().getString(ARG_MUSIC_TYPE);
         }
     }
@@ -85,6 +86,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         View rootView = inflater.inflate(R.layout.fragment_track_list, container, false);
         ButterKnife.bind(this, rootView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        //mMusicListRecyclerView.setNestedScrollingEnabled(false);
         mMusicListRecyclerView.setLayoutManager(manager);
         this.mAdapter = new MusicListAdapter(getContext(), this, this.mType);
         this.mMusicListRecyclerView.setAdapter(mAdapter);
@@ -104,27 +106,42 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         switch (this.mType) {
             case Constants.ARTIST:
                 mTrackViewModel.getTracks(mId, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
-                    switch (response.status) {
-                        case LOADING:
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            break;
-                        case ERROR:
-                            mProgressBar.setVisibility(View.GONE);
-                            Toast.makeText(getActivity(), "Failed to load tracks", Toast.LENGTH_SHORT).show();
-                            break;
-                        case SUCCESS:
-                            mProgressBar.setVisibility(View.GONE);
-                            this.mItems = response.data;
-                            this.mAdapter.setItems(mItems);
-                            getTracksSavedStatus(mItems);
-                            break;
-                        default:
-                            break;
-                    }
+                    handleTrackResponse(response);
                 });
                 break;
+            case Constants.RECENTLY_PLAYED:
+                mTrackViewModel.getTracks(null, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                    handleTrackResponse(response);
+                });
+                break;
+            case Constants.TOP_TRACKS:
+                mTrackViewModel.getTracks(null, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                    handleTrackResponse(response);
+                });
+                break;
+
+        }
+    }
+
+    private void handleTrackResponse(ApiResponse<List<MusicListItem>> response) {
+        switch (response.status) {
+            case LOADING:
+                mProgressBar.setVisibility(View.VISIBLE);
+                break;
+            case ERROR:
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Failed to load tracks", Toast.LENGTH_SHORT).show();
+                break;
+            case SUCCESS:
+                mProgressBar.setVisibility(View.GONE);
+                this.mItems = response.data;
+                this.mAdapter.setItems(mItems);
+                Log.i(TAG, "tracks loaded");
+                getTracksSavedStatus(mItems);
+                break;
             default:
-                Log.i(TAG, "default case");
+                break;
+
         }
     }
 

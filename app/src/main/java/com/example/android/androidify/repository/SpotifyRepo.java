@@ -198,6 +198,21 @@ public class SpotifyRepo {
         return data;
     }
 
+    public LiveData<ApiResponse<List<MusicListItem>>> getRecentlyPlayedTracks() {
+        return new SpotifyApiResource<Pager<TrackWrapper>, List<MusicListItem>>() {
+            @Override
+            protected Call<Pager<TrackWrapper>> createCall() {
+                return apiService.getRecentlyPlayed();
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable Pager<TrackWrapper> data) {
+                List<MusicListItem> tracks = parseTrackWrapper(data);
+                return tracks;
+            }
+        }.getAsLiveData();
+    }
+
     public LiveData<List<Artist>> getTopArtists() {
         final MutableLiveData<List<Artist>> data = new MutableLiveData<>();
         apiService.getTopArtists().enqueue(new Callback<Pager<Artist>>() {
@@ -232,6 +247,21 @@ public class SpotifyRepo {
         return data;
     }
 
+    public LiveData<ApiResponse<List<MusicListItem>>> getUserTopTracks() {
+        return new SpotifyApiResource<Pager<Track>, List<MusicListItem>>() {
+            @Override
+            protected Call<Pager<Track>> createCall() {
+                return apiService.getTopTracks();
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable Pager<Track> data) {
+                List<MusicListItem> tracks = parseTracks(data.items);
+                return tracks;
+            }
+        }.getAsLiveData();
+    }
+
     public LiveData<List<Track>> getSavedTracks() {
         final MutableLiveData<List<Track>> data = new MutableLiveData<>();
         apiService.getSavedTracks().enqueue(new Callback<Pager<TrackWrapper>>() {
@@ -257,6 +287,16 @@ public class SpotifyRepo {
         for (TrackWrapper trackWrapper : trackPager.items) {
             if (trackWrapper != null) {
                 tracks.add(trackWrapper.track);
+            }
+        }
+        return tracks;
+    }
+
+    private List<MusicListItem> parseTrackWrapper(Pager<TrackWrapper> trackWrapperPager) {
+        List<MusicListItem> tracks = new ArrayList<>();
+        for (TrackWrapper trackWrapper : trackWrapperPager.items) {
+            if (trackWrapper != null) {
+                tracks.add(new MusicListItem(trackWrapper.track));
             }
         }
         return tracks;
