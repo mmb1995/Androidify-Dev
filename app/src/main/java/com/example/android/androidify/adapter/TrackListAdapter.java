@@ -1,8 +1,6 @@
 package com.example.android.androidify.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -64,7 +64,7 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.Trac
 
         Picasso.get()
                 .load(images.get(0).url)
-                .placeholder(R.color.colorPrimary)
+                .placeholder(R.color.imageLoadingColor)
                 .into(holder.mCoverArtImageView);
     }
 

@@ -1,25 +1,25 @@
 package com.example.android.androidify.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.api.models.Image;
-import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
+import com.example.android.androidify.interfaces.ListItemClickListener;
 import com.example.android.androidify.model.MusicListItem;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,15 +29,15 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
     private List<MusicListItem> mItems;
     private Context mContext;
     private String mType;
-    private final MusicPlaybackClickListener mListener;
+    private final ListItemClickListener mListener;
 
-    public MusicListAdapter(Context context, MusicPlaybackClickListener listener, String type) {
+    public MusicListAdapter(Context context, ListItemClickListener listener, String type) {
         this.mContext = context;
         this.mListener = listener;
         this.mType = type;
     }
 
-    public MusicListAdapter(Context context, MusicPlaybackClickListener listener, String type,
+    public MusicListAdapter(Context context, ListItemClickListener listener, String type,
                             List<MusicListItem> items) {
         this(context, listener, type);
         this.mItems = items;
@@ -48,7 +48,6 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
     public MusicListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View rootView = inflater.inflate(R.layout.item_track, viewGroup, false);
-        Log.i(TAG, "inflating track list view holder");
         return new MusicListViewHolder(rootView, mListener);
     }
 
@@ -57,6 +56,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
         MusicListItem item = mItems.get(pos);
         holder.mTitleTextView.setText(item.name);
         holder.mArtistTextView.setText(item.artistName);
+        holder.mLikeButton.setSelected(item.isLiked);
 
         /**
         if (mType.equals(Constants.TRACK)) {
@@ -74,7 +74,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
 
         Picasso.get()
                 .load(images.get(0).url)
-                .placeholder(R.color.colorPrimary)
+                .placeholder(R.color.imageLoadingColor)
                 .into(holder.mCoverArtImageView);
     }
 
@@ -91,7 +91,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
         }
     }
 
-    public void setItems(ArrayList<MusicListItem> items) {
+    public void setItems(List<MusicListItem> items) {
         this.mItems = items;
         this.notifyDataSetChanged();
     }
@@ -105,20 +105,30 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
         TextView mArtistTextView;
         @BindView(R.id.track_like_button)
         ImageButton mLikeButton;
+        @BindView(R.id.track_info)
+        LinearLayout mTrackInfo;
 
 
-        private final MusicPlaybackClickListener mListener;
+        private final ListItemClickListener mListener;
 
-        public MusicListViewHolder(@NonNull View itemView, MusicPlaybackClickListener listener) {
+        public MusicListViewHolder(@NonNull View itemView, ListItemClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.mListener = listener;
-            itemView.setOnClickListener(this);
+            Log.i(TAG, "Creating ViewHolder");
+            mTrackInfo.setOnClickListener(this);
+            mLikeButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            mListener.onItemClicked(getAdapterPosition());
+            Log.i(TAG, "clicked id = " + view.getId());
+            Log.i(TAG, "like id =  " + R.id.track_like_button);
+            if (view.getId() == R.id.track_like_button) {
+                mListener.onLikeClicked(getAdapterPosition());
+            } else {
+                mListener.onItemSelected(getAdapterPosition());
+            }
         }
     }
 }

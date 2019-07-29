@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimary">#aa0000</color>
+    <color name="colorPrimaryVariant">#E50914</color>
     <color name="colorPrimaryDark">#000000</color>
+    <color name="colorSecondary">#1DB954</color>
     <color name="colorAccent">#E50914</color>
     <color name="colorPrimaryLight">#484848</color>
     <color name="colorSurface">#121212</color>
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorOnSurface">#FFFFFF</color>
     <color name="textPrimary">#ffffff</color>
     <color name="textBold">#FFFFFF</color>
     <color name="textSecondary">#D3D3D3</color>
     <color name="rippleColor">#212121</color>
     <color name="scrimStart">#CC000000</color>
     <color name="scrimCenter">#66000000</color>
-    <color name="scrimEnd">@color/colorPrimaryLight</color>
+    <color name="scrimEnd">#000000</color>
+    <color name="nowPlayingBarColor">#212121</color>
+    <color name="imageLoadingColor">#212121</color>
+
+    <color name="colorDisabledButton">#d6d6d6</color>
+
+    <color name="translucent_scrim_top">#26000000</color>
+    <color name="translucent_scrim_top_center">#0C000000</color>
+    <color name="translucent_scrim_bottom">#2A000000</color>
+    <color name="translucent_scrim_bottom_center">#0D000000</color>
 </resources>
 
 <!--
-#66000000
-CC515116
+#E50914
+#03DAC6
+
+#388E3C
+#FF5252
 !-->

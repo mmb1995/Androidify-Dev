@@ -1,12 +1,6 @@
 package com.example.android.androidify.fragments;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +14,16 @@ import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.Track;
 import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
-import com.example.android.androidify.viewmodel.MusicPlaybackViewModel;
+import com.example.android.androidify.viewmodel.MainActivityViewModel;
 import com.example.android.androidify.viewmodel.UserHistoryViewModel;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
@@ -52,15 +51,8 @@ public class TopHistoryListFragment extends Fragment implements MusicPlaybackCli
     private TopTrackListAdapter mTrackAdapter;
     private ArtistListAdapter mArtistAdapter;
     private UserHistoryViewModel mViewModel;
-    private MusicPlaybackViewModel mMusicPlaybackViewModel;
+    private MainActivityViewModel mMainViewModel;
     private String mTitle;
-
-    onTopHistorySelectedListener mCallback;
-
-
-    public interface onTopHistorySelectedListener {
-        void onTopHistorySelected(String id);
-    }
 
     public TopHistoryListFragment() {
         // Required empty public constructor
@@ -73,18 +65,6 @@ public class TopHistoryListFragment extends Fragment implements MusicPlaybackCli
         fragment.setArguments(args);
         return fragment;
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            mCallback = (onTopHistorySelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement listener");
-        }
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +89,7 @@ public class TopHistoryListFragment extends Fragment implements MusicPlaybackCli
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AndroidSupportInjection.inject(this);
-        mMusicPlaybackViewModel = ViewModelProviders.of(getActivity()).get(MusicPlaybackViewModel.class);
+        mMainViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
         configureViewModel();
     }
 
@@ -166,11 +146,10 @@ public class TopHistoryListFragment extends Fragment implements MusicPlaybackCli
 
     @Override
     public void onItemClicked(int position) {
-        String uri;
         if (mTitle.equals(TOP_ARTISTS)) {
-            uri = "";
             Artist selectedArtist = this.mArtistAdapter.getItemAtPosition(position);
-            mCallback.onTopHistorySelected(selectedArtist.id);
+            //mCallback.onTopHistorySelected(selectedArtist.id);
+            mMainViewModel.setCurrentArtistId(selectedArtist.id);
             /**
             Artist selectedArtist = this.mArtistAdapter.getItemAtPosition(position);
             Log.i(TAG, "name = " + selectedArtist.name + " uri = " + selectedArtist.uri);
@@ -178,8 +157,8 @@ public class TopHistoryListFragment extends Fragment implements MusicPlaybackCli
              **/
         } else {
             Track selectedTrack = this.mTrackAdapter.getItemAtPosition(position);
-            uri = selectedTrack.uri;
+            String uri = selectedTrack.uri;
+            mMainViewModel.setCurrentlyPlaying(uri);
         }
-        mMusicPlaybackViewModel.setCurrentlyPlaying(uri);
     }
 }

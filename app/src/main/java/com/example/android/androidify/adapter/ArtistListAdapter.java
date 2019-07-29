@@ -1,8 +1,6 @@
 package com.example.android.androidify.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ArtistListAdapter extends RecyclerView.Adapter<TopHistoryViewHolder>  {
     private static final String TAG = "ARTIST_LIST_ADAPTER";
@@ -46,7 +47,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<TopHistoryViewHolder
 
         Picasso.get()
                 .load(artistImage.url)
-                .placeholder(R.color.colorPrimary)
+                .placeholder(R.color.imageLoadingColor)
                 .into(holder.mCoverArtImageView);
 
         /**
