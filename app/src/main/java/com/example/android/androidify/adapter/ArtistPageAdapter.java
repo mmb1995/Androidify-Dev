@@ -1,14 +1,15 @@
 package com.example.android.androidify.adapter;
 
 import android.content.Context;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.fragments.ArtistGalleryFragment;
 import com.example.android.androidify.fragments.TrackListFragment;
 import com.example.android.androidify.utils.Constants;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 public class ArtistPageAdapter extends FragmentPagerAdapter {
     private static final int NUM_ITEMS = 2;
@@ -26,9 +27,9 @@ public class ArtistPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TrackListFragment.newInstance(mId, Constants.ARTIST);
+                return TrackListFragment.newInstance(mId, Constants.ARTIST, null);
             case 1:
-                return ArtistGalleryFragment.newInstance(mId);
+                return ArtistGalleryFragment.newInstance(mId, null);
             default:
                 return null;
         }

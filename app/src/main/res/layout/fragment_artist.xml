@@ -112,7 +112,7 @@
     <com.example.android.androidify.view.CustomViewPager
         android:id="@+id/artist_view_pager"
         android:layout_width="0dp"
-        android:layout_height="4dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/artist_tabs"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

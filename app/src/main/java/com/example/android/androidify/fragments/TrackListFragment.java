@@ -16,6 +16,7 @@ import com.example.android.androidify.model.MusicListItem;
 import com.example.android.androidify.utils.Constants;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
+import com.example.android.androidify.viewmodel.TopHistoryViewModel;
 import com.example.android.androidify.viewmodel.TrackListViewModel;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     //private static final String ARG_MUSIC_LIST = "music_list";
     private static final String ARG_MUSIC_TYPE = "music_type";
     private static final String ARG_ID = "track_id";
+    private static final String ARG_RANGE = "time_range";
 
     @BindView(R.id.track_list_rv)
     RecyclerView mMusicListRecyclerView;
@@ -52,20 +54,23 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     private List<MusicListItem> mItems;
     private MainActivityViewModel mMainViewModel;
     private TrackListViewModel mTrackViewModel;
+    private TopHistoryViewModel mTopHistoryViewModel;
     private String mId;
     private String mType;
+    private String mRange;
+
+    private int counter = 0;
 
     public TrackListFragment() {
         // Required empty public constructor
     }
 
-
-    public static TrackListFragment newInstance(String id, String type) {
+    public static TrackListFragment newInstance(String id, String type, String range) {
         TrackListFragment fragment = new TrackListFragment();
-        Log.i(TAG, "Creating new TrackListFragment");
         Bundle args = new Bundle();
         args.putString(ARG_ID, id);
         args.putString(ARG_MUSIC_TYPE, type);
+        args.putString(ARG_RANGE, range);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,6 +81,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         if (getArguments() != null) {
             mId = getArguments().getString(ARG_ID, null);
             mType = getArguments().getString(ARG_MUSIC_TYPE);
+            mRange = getArguments().getString(ARG_RANGE, Constants.MEDIUM_TERM);
         }
     }
 
@@ -86,7 +92,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         View rootView = inflater.inflate(R.layout.fragment_track_list, container, false);
         ButterKnife.bind(this, rootView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        //mMusicListRecyclerView.setNestedScrollingEnabled(false);
+        mMusicListRecyclerView.setNestedScrollingEnabled(false);
         mMusicListRecyclerView.setLayoutManager(manager);
         this.mAdapter = new MusicListAdapter(getContext(), this, this.mType);
         this.mMusicListRecyclerView.setAdapter(mAdapter);
@@ -99,31 +105,43 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         AndroidSupportInjection.inject(this);
         mMainViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
         mTrackViewModel = ViewModelProviders.of(this, mFactoryModel).get(TrackListViewModel.class);
+        mTopHistoryViewModel = ViewModelProviders.of(getParentFragment()).get(TopHistoryViewModel.class);
+        configureViewModel();
+    }
+
+    private void configureViewModel() {
+        if (mType.equals(Constants.TOP_TRACKS) || mType.equals(Constants.TOP_ARTISTS)) {
+            mTrackViewModel.initTopTracks();
+            mTrackViewModel.setTimeRange(mRange);
+            mTopHistoryViewModel.getTimeRange().observe(this, (String range) -> {
+                mTrackViewModel.setTimeRange(range);
+            });
+        }
         getTracks();
     }
 
     private void getTracks() {
         switch (this.mType) {
             case Constants.ARTIST:
-                mTrackViewModel.getTracks(mId, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                mTrackViewModel.getTracks(mId, mType, mRange).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
                     handleTrackResponse(response);
                 });
                 break;
             case Constants.RECENTLY_PLAYED:
-                mTrackViewModel.getTracks(null, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                mTrackViewModel.getTracks(null, mType, mRange).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
                     handleTrackResponse(response);
                 });
                 break;
             case Constants.TOP_TRACKS:
-                mTrackViewModel.getTracks(null, mType).observe(this, (ApiResponse<List<MusicListItem>> response) -> {
+                mTrackViewModel.getTopTracks().observe(this, (ApiResponse<List<MusicListItem>> response) -> {
                     handleTrackResponse(response);
                 });
                 break;
-
         }
     }
 
     private void handleTrackResponse(ApiResponse<List<MusicListItem>> response) {
+        //Log.i(TAG, mRange + " " + mType);
         switch (response.status) {
             case LOADING:
                 mProgressBar.setVisibility(View.VISIBLE);
@@ -136,17 +154,15 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                 mProgressBar.setVisibility(View.GONE);
                 this.mItems = response.data;
                 this.mAdapter.setItems(mItems);
-                Log.i(TAG, "tracks loaded");
                 getTracksSavedStatus(mItems);
                 break;
             default:
                 break;
-
         }
     }
 
     private void getTracksSavedStatus(List<MusicListItem> tracks) {
-        mTrackViewModel.checkTracks().observe(this, (ApiResponse<Boolean[]> response) -> {
+        mTrackViewModel.checkTracks(tracks).observe(this, (ApiResponse<Boolean[]> response) -> {
             switch (response.status) {
                 case LOADING:
                     break;
@@ -191,14 +207,13 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     }
 
     private void handleLikeAction(MusicListItem item, int position, ApiResponse<Void> response) {
-        Log.i(TAG, "handle like click");
         switch (response.status) {
             case LOADING:
                 break;
             case SUCCESS:
-                Log.i(TAG, "liked before = " + item.isLiked);
+                //Log.i(TAG, "liked before = " + item.isLiked);
                 item.isLiked = !item.isLiked;
-                Log.i(TAG, "liked after = " + item.isLiked);
+                //Log.i(TAG, "liked after = " + item.isLiked);
                 this.mAdapter.notifyItemChanged(position);
                 break;
             case ERROR:

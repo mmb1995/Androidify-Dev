@@ -230,6 +230,21 @@ public class SpotifyRepo {
         return data;
     }
 
+    public LiveData<ApiResponse<List<MusicListItem>>> getUserTopArtists(String range) {
+        return new SpotifyApiResource<Pager<Artist>, List<MusicListItem>>() {
+            @Override
+            protected Call<Pager<Artist>> createCall() {
+                return apiService.getTopArtists(range);
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable Pager<Artist> data) {
+                List<MusicListItem> artists = parseArtists(data.items);
+                return artists;
+            }
+        }.getAsLiveData();
+    }
+
     public LiveData<List<Track>> getTopTracks() {
         final MutableLiveData<List<Track>> data = new MutableLiveData<>();
         apiService.getTopTracks().enqueue(new Callback<Pager<Track>>() {
@@ -256,6 +271,23 @@ public class SpotifyRepo {
 
             @Override
             protected List<MusicListItem> processResponse(@Nullable Pager<Track> data) {
+                List<MusicListItem> tracks = parseTracks(data.items);
+                return tracks;
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getUserTopTracks(String timeRange) {
+        return new SpotifyApiResource<Pager<Track>, List<MusicListItem>>() {
+            @Override
+            protected Call<Pager<Track>> createCall() {
+                return apiService.getTopTracks(timeRange);
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable Pager<Track> data) {
+                Log.i(TAG, timeRange);
+                Log.i(TAG, "" + data.items.size());
                 List<MusicListItem> tracks = parseTracks(data.items);
                 return tracks;
             }
@@ -323,6 +355,9 @@ public class SpotifyRepo {
     }
 
     private String getIdList(List<MusicListItem> items) {
+        if (items == null) {
+            return null;
+        }
         StringBuilder builder = new StringBuilder(items.size() + items.size() - 1);
         for (int i = 0; i < items.size() - 1; i++) {
             MusicListItem item = items.get(i);

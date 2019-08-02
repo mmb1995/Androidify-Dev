@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.android.androidify.R;
+import com.example.android.androidify.fragments.ArtistGalleryFragment;
 import com.example.android.androidify.fragments.TrackListFragment;
 import com.example.android.androidify.utils.Constants;
 
@@ -30,11 +31,11 @@ public class TopHistoryPageAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 Log.i(TAG, "at position 0");
-                return TrackListFragment.newInstance(null, Constants.TOP_TRACKS);
+                return ArtistGalleryFragment.newInstance(null, Constants.MEDIUM_TERM);
             case 1:
-                return TrackListFragment.newInstance(null, Constants.RECENTLY_PLAYED);
+                return TrackListFragment.newInstance(null, Constants.TOP_TRACKS, Constants.MEDIUM_TERM);
             case 2:
-                return TrackListFragment.newInstance(null, Constants.TOP_TRACKS);
+                return TrackListFragment.newInstance(null, Constants.RECENTLY_PLAYED, null);
             default:
                 return null;
         }
@@ -49,9 +50,9 @@ public class TopHistoryPageAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return  mContext.getString(R.string.top_history_track_tab);
-            case 1:
                 return mContext.getString(R.string.top_history_artist_tab);
+            case 1:
+                return mContext.getString(R.string.top_history_track_tab);
             case 2:
                 return mContext.getString(R.string.top_history_recent_tab);
             default:
