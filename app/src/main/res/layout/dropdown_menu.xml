@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textfield.TextInputLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+    android:id="@+id/dropdown_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:hint="@string/top_history_dropdown_hint">
+    app:boxStrokeColor="@android:color/transparent">
 
     <AutoCompleteTextView
         android:id="@+id/filled_exposed_dropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="100"
-        android:editable="false"/>
+        android:editable="false" />
 
 </com.google.android.material.textfield.TextInputLayout>

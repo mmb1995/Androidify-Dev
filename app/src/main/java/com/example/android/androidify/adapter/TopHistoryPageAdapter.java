@@ -1,7 +1,6 @@
 package com.example.android.androidify.adapter;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.fragments.ArtistGalleryFragment;
@@ -30,7 +29,6 @@ public class TopHistoryPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                Log.i(TAG, "at position 0");
                 return ArtistGalleryFragment.newInstance(null, Constants.MEDIUM_TERM);
             case 1:
                 return TrackListFragment.newInstance(null, Constants.TOP_TRACKS, Constants.MEDIUM_TERM);

@@ -11,29 +11,17 @@
         style="@style/Widget.MaterialComponents.TabLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
         android:elevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_history_dropdown"
-        app:tabTextColor="@color/textBold" />
-
-    <include
-        android:id="@+id/top_history_dropdown"
-        layout="@layout/dropdown_menu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/top_history_tabs"/>
-
+        app:tabTextColor="@color/textBold" />
 
     <com.example.android.androidify.view.CustomViewPager
         android:id="@+id/top_history_view_pager"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
+        android:padding="@dimen/default_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"

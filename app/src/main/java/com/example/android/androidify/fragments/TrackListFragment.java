@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -16,8 +19,8 @@ import com.example.android.androidify.model.MusicListItem;
 import com.example.android.androidify.utils.Constants;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
-import com.example.android.androidify.viewmodel.TopHistoryViewModel;
 import com.example.android.androidify.viewmodel.TrackListViewModel;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -47,6 +50,15 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     @BindView(R.id.track_list_progress_bar)
     ProgressBar mProgressBar;
 
+    /**
+    @Nullable
+    @BindView(R.id.dropdown_container)
+    TextInputLayout mDropdownContainer;
+     **/
+
+    @BindView(R.id.filled_exposed_dropdown)
+    AutoCompleteTextView mDropdown;
+
     @Inject
     FactoryViewModel mFactoryModel;
 
@@ -54,12 +66,9 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     private List<MusicListItem> mItems;
     private MainActivityViewModel mMainViewModel;
     private TrackListViewModel mTrackViewModel;
-    private TopHistoryViewModel mTopHistoryViewModel;
     private String mId;
     private String mType;
     private String mRange;
-
-    private int counter = 0;
 
     public TrackListFragment() {
         // Required empty public constructor
@@ -99,13 +108,43 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         return rootView;
     }
 
+    private void displayDropdown() {
+        String[] dropdownArray = getResources().getStringArray(R.array.top_history_dropdown_array);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                R.layout.item_dropdown_menu,
+                dropdownArray
+        );
+        mDropdown.setAdapter(adapter);
+        mDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.i(TAG, "pos = " + position);
+                switch (position) {
+                    case 0:
+                        mTrackViewModel.setTimeRange(Constants.LONG_TERM);
+                        break;
+                    case 1:
+                        mTrackViewModel.setTimeRange(Constants.MEDIUM_TERM);
+                        break;
+                    case 2:
+                        mTrackViewModel.setTimeRange(Constants.SHORT_TERM);
+                        break;
+                }
+                mDropdown.setText(adapter.getItem(position), false);
+                //mDropdown.setSelection();
+            }
+        });
+        mDropdown.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AndroidSupportInjection.inject(this);
         mMainViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
         mTrackViewModel = ViewModelProviders.of(this, mFactoryModel).get(TrackListViewModel.class);
-        mTopHistoryViewModel = ViewModelProviders.of(getParentFragment()).get(TopHistoryViewModel.class);
         configureViewModel();
     }
 
@@ -113,9 +152,14 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         if (mType.equals(Constants.TOP_TRACKS) || mType.equals(Constants.TOP_ARTISTS)) {
             mTrackViewModel.initTopTracks();
             mTrackViewModel.setTimeRange(mRange);
-            mTopHistoryViewModel.getTimeRange().observe(this, (String range) -> {
-                mTrackViewModel.setTimeRange(range);
-            });
+            displayDropdown();
+        } else {
+            mDropdown.setVisibility(View.GONE);
+            TextInputLayout mTextInput = getView().findViewById(R.id.dropdown_container);
+            if (mTextInput != null) {
+                mTextInput.setEndIconMode(TextInputLayout.END_ICON_NONE);
+                mTextInput.setVisibility(View.GONE);
+            }
         }
         getTracks();
     }
@@ -144,14 +188,16 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         //Log.i(TAG, mRange + " " + mType);
         switch (response.status) {
             case LOADING:
+                mMusicListRecyclerView.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
                 break;
             case ERROR:
-                mProgressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getActivity(), "Failed to load tracks", Toast.LENGTH_SHORT).show();
                 break;
             case SUCCESS:
-                mProgressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mMusicListRecyclerView.setVisibility(View.VISIBLE);
                 this.mItems = response.data;
                 this.mAdapter.setItems(mItems);
                 getTracksSavedStatus(mItems);

@@ -15,6 +15,7 @@ import com.example.android.androidify.fragments.TopHistoryFragment;
 import com.example.android.androidify.model.EventObserver;
 import com.example.android.androidify.utils.MusicPlayBar;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -34,6 +35,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -90,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @BindView(R.id.bottom_nav_bar)
     BottomNavigationView mBottomNavView;
+
+    @BindView(R.id.toolbar)
+    MaterialToolbar mToolbar;
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
@@ -209,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         AndroidInjection.inject(this);
+        setSupportActionBar(mToolbar);
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mSeekBar.setEnabled(false);
         MaterialShapeDrawable materialShapeDrawable = MaterialShapeDrawable.createWithElevationOverlay(this, 8);

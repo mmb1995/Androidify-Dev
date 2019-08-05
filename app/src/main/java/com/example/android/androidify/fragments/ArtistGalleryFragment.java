@@ -6,12 +6,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ProgressBar;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.adapter.ArtistGalleryAdapter;
 import com.example.android.androidify.api.ApiResponse;
 import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
 import com.example.android.androidify.model.MusicListItem;
+import com.example.android.androidify.utils.Constants;
 import com.example.android.androidify.viewmodel.ArtistGalleryViewModel;
 import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
@@ -44,6 +49,12 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
     @BindView(R.id.artist_gallery_recycler_view)
     RecyclerView mArtistGalleryRv;
 
+    @BindView(R.id.filled_exposed_dropdown)
+    AutoCompleteTextView mDropdown;
+
+    @BindView(R.id.artist_gallery_progress_bar)
+    ProgressBar mProgressBar;
+
     @Inject
     FactoryViewModel mFactoryModel;
 
@@ -52,7 +63,6 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
     private String mTimeRange;
     private MainActivityViewModel mViewModel;
     private ArtistGalleryViewModel mArtistGalleryViewModel;
-    private TopHistoryViewModel mTopHistoryViewModel;
 
     public ArtistGalleryFragment() {
         // Required empty public constructor
@@ -94,13 +104,44 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
         return rootView;
     }
 
+    private void displayDropdown() {
+        String[] dropdownArray = getResources().getStringArray(R.array.top_history_dropdown_array);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                R.layout.item_dropdown_menu,
+                dropdownArray
+        );
+        mDropdown.setAdapter(adapter);
+        mDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.i(TAG, "pos = " + position);
+                switch (position) {
+                    case 0:
+                        mArtistGalleryViewModel.setTimeRange(Constants.LONG_TERM);
+                        break;
+                    case 1:
+                        mArtistGalleryViewModel.setTimeRange(Constants.MEDIUM_TERM);
+                        break;
+                    case 2:
+                        mArtistGalleryViewModel.setTimeRange(Constants.SHORT_TERM);
+                        break;
+                }
+                mDropdown.setText(adapter.getItem(position), false);
+                mDropdown.setVisibility(View.VISIBLE);
+                //mDropdown.setSelection();
+            }
+        });
+    }
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AndroidSupportInjection.inject(this);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainActivityViewModel.class);
         mArtistGalleryViewModel = ViewModelProviders.of(this, mFactoryModel).get(ArtistGalleryViewModel.class);
-        mTopHistoryViewModel = ViewModelProviders.of(getParentFragment()).get(TopHistoryViewModel.class);
         configureArtistData();
     }
 
@@ -108,11 +149,15 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
         if (mTimeRange != null) {
             mArtistGalleryViewModel.initTopArtists();
             mArtistGalleryViewModel.setTimeRange(mTimeRange);
+            /**
             mTopHistoryViewModel.getTimeRange().observe(this,(String range) -> {
                 mArtistGalleryViewModel.setTimeRange(range);
             });
+             **/
             getTopArtists();
+            displayDropdown();
         } else {
+            mDropdown.setVisibility(View.GONE);
             getRelatedArtists();
         }
     }
@@ -134,11 +179,16 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
         if (response != null) {
             switch (response.status) {
                 case LOADING:
+                    mArtistGalleryRv.setVisibility(View.INVISIBLE);
+                    mProgressBar.setVisibility(View.VISIBLE);
                     break;
                 case SUCCESS:
                     this.mAdapter.setItems(response.data);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mArtistGalleryRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;
