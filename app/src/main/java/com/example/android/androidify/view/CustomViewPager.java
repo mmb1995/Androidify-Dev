@@ -1,15 +1,17 @@
 package com.example.android.androidify.view;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * A custom ViewPager inspired by mobikul to allow the ViewPager to be nested and
  * dynamically set its heights based off its children fragment layouts
  */
 public class CustomViewPager extends ViewPager {
+    private static final String TAG = "CUSTOM_VIEWPAGER";
 
     private int mCurrentPagePosition = 0;
 
@@ -32,6 +34,7 @@ public class CustomViewPager extends ViewPager {
         });
     }
 
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         View child = getChildAt(getCurrentItem());
@@ -47,4 +50,5 @@ public class CustomViewPager extends ViewPager {
         mCurrentPagePosition = position;
         requestLayout();
     }
+
 }

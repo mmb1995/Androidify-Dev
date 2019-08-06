@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<String> currentlyPlaying = new MutableLiveData<>();
     private MutableLiveData<Event<String>> currentArtistId = new MutableLiveData<>();
+    private MutableLiveData<Event<String>> mSnackBarEvent = new MutableLiveData<>();
 
     public MainActivityViewModel() {};
 
@@ -41,5 +42,20 @@ public class MainActivityViewModel extends ViewModel {
      */
     public LiveData<String> getCurrentlyPlaying() {
         return currentlyPlaying;
+    }
+
+    /**
+     * Returns the snackbar message to be displayed
+     */
+    public LiveData<Event<String>> getSnackbarEvent() {
+        return mSnackBarEvent;
+    }
+
+    /**
+     * Tells activity to display a Snackbar
+     * @param message the message to display in the Snackbar
+     */
+    public void setSnackBarMessage(String message) {
+        mSnackBarEvent.setValue(new Event(message));
     }
 }

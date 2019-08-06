@@ -2,6 +2,7 @@ package com.example.android.androidify;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -9,13 +10,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.android.androidify.fragments.ArtistFragment;
+import com.example.android.androidify.fragments.HomeFragment;
 import com.example.android.androidify.fragments.TopHistoryFragment;
 import com.example.android.androidify.model.EventObserver;
 import com.example.android.androidify.utils.MusicPlayBar;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.snackbar.Snackbar;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -32,7 +36,9 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -55,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @BindView(R.id.now_playing)
     ConstraintLayout mNowPlayingBar;
+
+    @BindView(R.id.snackbar_container)
+    CoordinatorLayout mSnackbarContainer;
 
     @BindView(R.id.now_playing_cover_art)
     ImageView mNowPlayingImage;
@@ -88,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @BindView(R.id.bottom_nav_bar)
     BottomNavigationView mBottomNavView;
+
+    @BindView(R.id.toolbar)
+    MaterialToolbar mToolbar;
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
@@ -174,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
     };
 
+
     /**
      * Enables and disables player controls based off the current player state
      * @param restrictions status of restricted actions
@@ -206,16 +219,20 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         AndroidInjection.inject(this);
+        setSupportActionBar(mToolbar);
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mSeekBar.setEnabled(false);
         MaterialShapeDrawable materialShapeDrawable = MaterialShapeDrawable.createWithElevationOverlay(this, 8);
         mNowPlayingBar.setBackground(materialShapeDrawable);
         mNowPlayingBar.setElevation(materialShapeDrawable.getElevation());
         if (savedInstanceState == null) {
-            displayTopHistory();
+            displayHomeFragment();
         }
         initBottomSheet();
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        mBottomNavView.setOnNavigationItemSelectedListener((MenuItem item) -> {
+            return onBottomNavItemClicked(item);
+        });
         setupViewModelObservers();
     }
 
@@ -226,6 +243,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mViewModel.getCurrentlyPlaying().observe(this, (String uri) -> {
             onPlayUri(uri);
         });
+        mViewModel.getSnackbarEvent().observe(this, new EventObserver<String>(message -> {
+            onSnackBarEvent(message);
+        }));
     }
 
     private void initBottomSheet() {
@@ -291,8 +311,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
 
-    private void displayTopHistory() {
-        Fragment topHistoryFragment = new TopHistoryFragment();
+    private void displayHomeFragment() {
+        Fragment topHistoryFragment = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment_container, topHistoryFragment);
         transaction.commit();
@@ -302,6 +322,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Fragment artistFragment = ArtistFragment.newInstance(id);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment_container, artistFragment)
+                .addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void displayTopHistory() {
+        Fragment topHistoryFragment = new TopHistoryFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment_container, topHistoryFragment)
                 .addToBackStack(null);
         transaction.commit();
     }
@@ -392,6 +420,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mRepeatButton.setOnClickListener((View v) -> { this.onToggleRepeat();});
         mPlayPreviousButton.setOnClickListener((View v) -> { this.onSkipPrevious();});
         mPlayNextButton.setOnClickListener((View v) -> { this.onSkipNext();});
+    }
+
+    private boolean onBottomNavItemClicked(MenuItem item) {
+        Log.i(TAG,"item id = " + item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.navigation_library:
+                displayTopHistory();
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -504,6 +543,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);
             //mSpotifyAppRemote = null;
         }
+    }
+
+    /**
+     * Displays Snackbar when triggered
+     * @param message
+     */
+    private void onSnackBarEvent(String message) {
+        Snackbar snackbar = Snackbar.make(mSnackbarContainer, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private String formatTime(long milliseconds) {

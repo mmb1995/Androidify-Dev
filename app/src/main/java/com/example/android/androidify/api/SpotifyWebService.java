@@ -28,10 +28,16 @@ public interface SpotifyWebService {
     Call<Boolean[]> isFollowingArtist(@Query("ids") String ids);
 
     @GET("me/top/artists")
+    Call<Pager<Artist>> getTopArtists(@Query("time_range") String range);
+
+    @GET("me/top/artists")
     Call<Pager<Artist>> getTopArtists();
 
     @GET("me/top/tracks")
     Call<Pager<Track>> getTopTracks();
+
+    @GET("me/top/tracks")
+    Call<Pager<Track>> getTopTracks(@Query("time_range") String range);
 
     @GET("me/player/recently-played")
     Call<Pager<TrackWrapper>> getRecentlyPlayed();
