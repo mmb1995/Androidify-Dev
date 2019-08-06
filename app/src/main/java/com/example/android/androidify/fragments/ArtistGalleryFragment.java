@@ -22,6 +22,7 @@ import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
 import com.example.android.androidify.viewmodel.TopHistoryViewModel;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
 
     @BindView(R.id.artist_gallery_recycler_view)
     RecyclerView mArtistGalleryRv;
+
+    @BindView(R.id.dropdown)
+    TextInputLayout mDropdownContainer;
 
     @BindView(R.id.filled_exposed_dropdown)
     AutoCompleteTextView mDropdown;
@@ -104,6 +108,9 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
         return rootView;
     }
 
+    /**
+     * Sets up dropdown to allow user to select time range for user history data
+     */
     private void displayDropdown() {
         String[] dropdownArray = getResources().getStringArray(R.array.top_history_dropdown_array);
 
@@ -129,10 +136,10 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
                         break;
                 }
                 mDropdown.setText(adapter.getItem(position), false);
-                mDropdown.setVisibility(View.VISIBLE);
-                //mDropdown.setSelection();
             }
         });
+        mDropdown.setVisibility(View.VISIBLE);
+        mDropdown.setText(adapter.getItem(1), false);
     }
 
 
@@ -149,15 +156,11 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
         if (mTimeRange != null) {
             mArtistGalleryViewModel.initTopArtists();
             mArtistGalleryViewModel.setTimeRange(mTimeRange);
-            /**
-            mTopHistoryViewModel.getTimeRange().observe(this,(String range) -> {
-                mArtistGalleryViewModel.setTimeRange(range);
-            });
-             **/
             getTopArtists();
             displayDropdown();
         } else {
             mDropdown.setVisibility(View.GONE);
+            mDropdownContainer.setVisibility(View.GONE );
             getRelatedArtists();
         }
     }

@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-    android:id="@+id/dropdown_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:boxStrokeColor="@android:color/transparent">

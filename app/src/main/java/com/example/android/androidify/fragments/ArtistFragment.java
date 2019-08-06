@@ -184,12 +184,13 @@ public class ArtistFragment extends Fragment {
                 break;
             case SUCCESS:
                 mModel.setIsFollowingArtist(following);
-                showSnackbarMessage(successMessage, undo);
+                //showSnackbarMessage(successMessage, undo);
+                createSnackbarEvent(successMessage);
                 break;
             case ERROR:
                 //mModel.setIsFollowingArtist(following);
                 Log.e(TAG, response.error);
-                showSnackbarMessage(getString(R.string.artist_follow_error), undo);
+                //showSnackbarMessage(getString(R.string.artist_follow_error), undo);
                 break;
             default:
                 break;
@@ -243,6 +244,7 @@ public class ArtistFragment extends Fragment {
         mArtistFollowersTextView.setText(followersString + " followers");
     }
 
+    /**
     private void showSnackbarMessage(String message, Boolean undo) {
         //Snackbar.make(getActivity().findViewById(R.id.snackbar_container), message, Snackbar.LENGTH_SHORT).show();
         Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.snackbar_container), message, Snackbar.LENGTH_LONG);
@@ -254,6 +256,11 @@ public class ArtistFragment extends Fragment {
         }
 
         snackbar.show();
+    }
+     **/
+
+    private void createSnackbarEvent(String message) {
+        mMainViewModel.setSnackBarMessage(message);
     }
 
 

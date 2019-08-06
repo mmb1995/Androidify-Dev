@@ -38,8 +38,6 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class TrackListFragment extends Fragment implements ListItemClickListener {
     private static final String TAG = "TRACK_LIST_FRAG";
-
-    //private static final String ARG_MUSIC_LIST = "music_list";
     private static final String ARG_MUSIC_TYPE = "music_type";
     private static final String ARG_ID = "track_id";
     private static final String ARG_RANGE = "time_range";
@@ -50,11 +48,8 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     @BindView(R.id.track_list_progress_bar)
     ProgressBar mProgressBar;
 
-    /**
-    @Nullable
-    @BindView(R.id.dropdown_container)
+    @BindView(R.id.dropdown)
     TextInputLayout mDropdownContainer;
-     **/
 
     @BindView(R.id.filled_exposed_dropdown)
     AutoCompleteTextView mDropdown;
@@ -120,7 +115,6 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
         mDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.i(TAG, "pos = " + position);
                 switch (position) {
                     case 0:
                         mTrackViewModel.setTimeRange(Constants.LONG_TERM);
@@ -133,10 +127,10 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                         break;
                 }
                 mDropdown.setText(adapter.getItem(position), false);
-                //mDropdown.setSelection();
             }
         });
         mDropdown.setVisibility(View.VISIBLE);
+        mDropdown.setText(adapter.getItem(1), false);
     }
 
     @Override
@@ -149,17 +143,13 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     }
 
     private void configureViewModel() {
-        if (mType.equals(Constants.TOP_TRACKS) || mType.equals(Constants.TOP_ARTISTS)) {
+        if (mType.equals(Constants.TOP_TRACKS)) {
             mTrackViewModel.initTopTracks();
             mTrackViewModel.setTimeRange(mRange);
             displayDropdown();
         } else {
             mDropdown.setVisibility(View.GONE);
-            TextInputLayout mTextInput = getView().findViewById(R.id.dropdown_container);
-            if (mTextInput != null) {
-                mTextInput.setEndIconMode(TextInputLayout.END_ICON_NONE);
-                mTextInput.setVisibility(View.GONE);
-            }
+            mDropdownContainer.setVisibility(View.GONE);
         }
         getTracks();
     }
@@ -261,10 +251,19 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                 item.isLiked = !item.isLiked;
                 //Log.i(TAG, "liked after = " + item.isLiked);
                 this.mAdapter.notifyItemChanged(position);
+                createSnackbarEvent(item.isLiked);
                 break;
             case ERROR:
                 Log.e(TAG, "Failed");
                 break;
+        }
+    }
+
+    private void createSnackbarEvent(Boolean isLiked) {
+        if (isLiked) {
+            mMainViewModel.setSnackBarMessage(getString(R.string.track_liked_message));
+        } else {
+            mMainViewModel.setSnackBarMessage(getString(R.string.track_unlike_message));
         }
     }
 }

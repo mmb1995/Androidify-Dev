@@ -19,6 +19,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.snackbar.Snackbar;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -37,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @BindView(R.id.now_playing)
     ConstraintLayout mNowPlayingBar;
+
+    @BindView(R.id.snackbar_container)
+    CoordinatorLayout mSnackbarContainer;
 
     @BindView(R.id.now_playing_cover_art)
     ImageView mNowPlayingImage;
@@ -238,6 +243,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mViewModel.getCurrentlyPlaying().observe(this, (String uri) -> {
             onPlayUri(uri);
         });
+        mViewModel.getSnackbarEvent().observe(this, new EventObserver<String>(message -> {
+            onSnackBarEvent(message);
+        }));
     }
 
     private void initBottomSheet() {
@@ -535,6 +543,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);
             //mSpotifyAppRemote = null;
         }
+    }
+
+    /**
+     * Displays Snackbar when triggered
+     * @param message
+     */
+    private void onSnackBarEvent(String message) {
+        Snackbar snackbar = Snackbar.make(mSnackbarContainer, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private String formatTime(long milliseconds) {

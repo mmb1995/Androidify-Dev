@@ -11,6 +11,8 @@
     <string name="top_history_track_tab">Tracks</string>
     <string name="top_history_recent_tab">Recent</string>
     <string name="top_history_dropdown_hint">Choose time range</string>
+    <string name="track_liked_message">Liked! Track added to Liked Songs</string>
+    <string name="track_unlike_message">Track removed from your library</string>
 
     <string-array name="top_history_dropdown_array">
         <item>All Time</item>
