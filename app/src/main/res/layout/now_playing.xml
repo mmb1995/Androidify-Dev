@@ -4,6 +4,7 @@
     android:id="@+id/now_playing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="56dp"
     android:minHeight="450dp"
     app:behavior_hideable="false"
     app:behavior_peekHeight="50dp"
@@ -13,7 +14,7 @@
     <ImageButton
         android:id="@+id/now_playing_expand"
         style="@style/NowPlayingSelectableButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginLeft="@dimen/default_margin"
@@ -36,10 +37,12 @@
 
     <ImageButton
         android:id="@+id/now_playing_collapsed_playback"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_play_circle_24px"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/now_playing_title"

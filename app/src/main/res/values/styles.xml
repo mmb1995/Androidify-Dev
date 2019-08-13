@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
@@ -8,7 +8,19 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="autoCompleteTextViewStyle">@style/customAutoCompleteTextViewStyle</item>
     </style>
+
+    <style name="customAutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:popupBackground">@color/imageLoadingColor</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <!--
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light">
+
+    </style>
+    !-->
 
     <style name="NowPlayingBarStyle" parent="Theme.MaterialComponents">
         <item name="enforceTextAppearance">true</item>
@@ -54,6 +66,16 @@
     <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_gravity">center</item>
     </style>
+
+    <style name="MusicListItemTextStyle">
+        <item name="android:textColor">@color/textBold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:alpha">@dimen/mtrl_emphasis_high_type</item>
+    </style>
+
+    <style name="MusicListItemTextStyle.Secondary">
+        <item name="android:alpha">@dimen/mtrl_emphasis_medium</item>
+    </style>
     
     <style name="NowPlayingIconButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>
@@ -78,6 +100,14 @@
 
     <style name="SnackBarStyle" parent="Widget.MaterialComponents.Snackbar" tools:override="true">
         <item name="android:paddingBottom">45dp</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary" tools:override="true">
+        <item name="android:contentInsetLeft">0dp</item>
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
 </resources>

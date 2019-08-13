@@ -1,7 +1,12 @@
 package com.example.android.androidify;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,8 +16,10 @@ import android.widget.TextView;
 
 import com.example.android.androidify.fragments.ArtistFragment;
 import com.example.android.androidify.fragments.HomeFragment;
+import com.example.android.androidify.fragments.SearchResultsFragment;
 import com.example.android.androidify.fragments.TopHistoryFragment;
 import com.example.android.androidify.model.EventObserver;
+import com.example.android.androidify.repository.SpotifySearchSuggestionsProvider;
 import com.example.android.androidify.utils.MusicPlayBar;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -36,7 +43,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -136,16 +143,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         @Override
         public void onEvent(PlayerState playerState) {
             if (playerState != null) {
-
                 // Update seekbar
                 if (mMusicPlayBar != null) {
-                    if (playerState.playbackSpeed > 0) {
+                    if (playerState.playbackSpeed > 0 && !playerState.isPaused) {
                         mMusicPlayBar.unpause();
                     } else {
                         mMusicPlayBar.pause();
                     }
                 }
-
 
                 // Update play/pause controls
                 if (playerState.isPaused) {
@@ -212,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mRepeatButton.setSelected(playerOptions.repeatMode != Repeat.OFF);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -228,13 +232,69 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         if (savedInstanceState == null) {
             displayHomeFragment();
         }
+
         initBottomSheet();
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mBottomNavView.setOnNavigationItemSelectedListener((MenuItem item) -> {
             return onBottomNavItemClicked(item);
         });
         setupViewModelObservers();
+        handleIntent(getIntent());
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_app_bar, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setQueryRefinementEnabled(true);
+        searchView.setIconifiedByDefault(false);
+        searchView.setFocusable(true);
+        searchView.requestFocusFromTouch();
+        searchView.setFocusableInTouchMode(true);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchView.clearFocus();
+                Log.i(TAG, s);
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(MainActivity.this,
+                        SpotifySearchSuggestionsProvider.AUTHORITY, SpotifySearchSuggestionsProvider.MODE);
+                suggestions.saveRecentQuery(s, null);
+                displaySearchResults(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s != null && s.length() > 3) {
+                    displaySearchResults(s);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        return true;
+    }
+
+    /**
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                onSearchRequested();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    **/
 
     private void setupViewModelObservers() {
         mViewModel.getCurrentArtistId().observe(this, new EventObserver<String>(artistId -> {
@@ -248,6 +308,31 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }));
     }
 
+    @Override
+    public boolean onSearchRequested() {
+        Log.i(TAG, "search requested");
+        return super.onSearchRequested();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SpotifySearchSuggestionsProvider.AUTHORITY, SpotifySearchSuggestionsProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+            displaySearchResults(query);
+            Log.i(TAG, query);
+        }
+    }
+
+
     private void initBottomSheet() {
         mBottomSheetBehavior = BottomSheetBehavior.from(mNowPlayingBar);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -255,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        mBottomNavView.setVisibility(View.VISIBLE);
+                        //mBottomNavView.setVisibility(View.VISIBLE);
                         mExpandNowPlayingButton.setImageResource(R.drawable.ic_arrow_up_24px);
                         mExpandNowPlayingButton.setVisibility(View.VISIBLE);
                         mCollapsedPlayControlsButton.setVisibility(View.VISIBLE);
@@ -263,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         mExpandNowPlayingButton.setVisibility(View.INVISIBLE);
-                        mBottomNavView.setVisibility(View.GONE);
+                        //mBottomNavView.setVisibility(View.GONE);
                         Log.i(TAG, "STATE_DRAGGING");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
@@ -330,6 +415,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Fragment topHistoryFragment = new TopHistoryFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment_container, topHistoryFragment)
+                .addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void displaySearchResults(String query) {
+        Fragment searchFragment = SearchResultsFragment.newInstance(query);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment_container, searchFragment)
                 .addToBackStack(null);
         transaction.commit();
     }

@@ -54,11 +54,6 @@ public class ArtistFragment extends Fragment {
     @BindView(R.id.artist_followers_text_view)
     TextView mArtistFollowersTextView;
 
-    /**
-    @BindView(R.id.shuffle_button)
-    FloatingActionButton mShuffleButton;
-     **/
-
     @BindView(R.id.artist_favorite_button)
     MaterialCheckBox mFavoriteButton;
 
@@ -100,7 +95,6 @@ public class ArtistFragment extends Fragment {
             this.mArtistId = getArguments().getString(ARG_ARTIST_ID);
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,16 +138,6 @@ public class ArtistFragment extends Fragment {
                 setFollowButton(isFollowing);
             }
         });
-
-        /**
-        model.getArtistTopTracks(mArtistId).observe( this, (ArrayList<MusicListItem> items) -> {
-            if (items != null) {
-                mArtistTopTracks = items;
-                mRelatedArtists = items;
-                configureViewPager();
-            }
-        });
-        **/
     }
 
     private void configurePlayButton() {
@@ -171,7 +155,6 @@ public class ArtistFragment extends Fragment {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-
     private void updateFollowStatus(Boolean following, ApiResponse<Void> response) {
         String successMessage = following ? getString(R.string.artist_followed_message) :
                 getString(R.string.artist_unfollowed_message);
@@ -184,11 +167,9 @@ public class ArtistFragment extends Fragment {
                 break;
             case SUCCESS:
                 mModel.setIsFollowingArtist(following);
-                //showSnackbarMessage(successMessage, undo);
                 createSnackbarEvent(successMessage);
                 break;
             case ERROR:
-                //mModel.setIsFollowingArtist(following);
                 Log.e(TAG, response.error);
                 //showSnackbarMessage(getString(R.string.artist_follow_error), undo);
                 break;
@@ -243,21 +224,6 @@ public class ArtistFragment extends Fragment {
         String followersString = numberFormat.format(followers);
         mArtistFollowersTextView.setText(followersString + " followers");
     }
-
-    /**
-    private void showSnackbarMessage(String message, Boolean undo) {
-        //Snackbar.make(getActivity().findViewById(R.id.snackbar_container), message, Snackbar.LENGTH_SHORT).show();
-        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.snackbar_container), message, Snackbar.LENGTH_LONG);
-
-        if (undo) {
-            snackbar.setAction(getString(R.string.artist_unfollow_undo), (View v) -> {
-                onFollowClicked();
-            });
-        }
-
-        snackbar.show();
-    }
-     **/
 
     private void createSnackbarEvent(String message) {
         mMainViewModel.setSnackBarMessage(message);

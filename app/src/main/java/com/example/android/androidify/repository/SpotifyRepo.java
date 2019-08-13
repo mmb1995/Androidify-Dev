@@ -7,10 +7,13 @@ import com.example.android.androidify.api.SpotifyApiResource;
 import com.example.android.androidify.api.SpotifyWebService;
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.ArtistTrackWrapper;
+import com.example.android.androidify.api.models.ArtistsPager;
 import com.example.android.androidify.api.models.Pager;
 import com.example.android.androidify.api.models.RelatedArtistsWrapper;
+import com.example.android.androidify.api.models.SearchResultsPager;
 import com.example.android.androidify.api.models.Track;
 import com.example.android.androidify.api.models.TrackWrapper;
+import com.example.android.androidify.api.models.TracksPager;
 import com.example.android.androidify.model.MusicListItem;
 
 import java.util.ArrayList;
@@ -262,21 +265,6 @@ public class SpotifyRepo {
         return data;
     }
 
-    public LiveData<ApiResponse<List<MusicListItem>>> getUserTopTracks() {
-        return new SpotifyApiResource<Pager<Track>, List<MusicListItem>>() {
-            @Override
-            protected Call<Pager<Track>> createCall() {
-                return apiService.getTopTracks();
-            }
-
-            @Override
-            protected List<MusicListItem> processResponse(@Nullable Pager<Track> data) {
-                List<MusicListItem> tracks = parseTracks(data.items);
-                return tracks;
-            }
-        }.getAsLiveData();
-    }
-
     public LiveData<ApiResponse<List<MusicListItem>>> getUserTopTracks(String timeRange) {
         return new SpotifyApiResource<Pager<Track>, List<MusicListItem>>() {
             @Override
@@ -310,6 +298,50 @@ public class SpotifyRepo {
             }
         });
         return data;
+    }
+
+    /** Search endpoints **/
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getArtistSearchResults(String query) {
+        return new SpotifyApiResource<ArtistsPager, List<MusicListItem>>() {
+            @Override
+            protected Call<ArtistsPager> createCall() {
+                return apiService.searchForArtists(query);
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable ArtistsPager data) {
+                return parseArtists(data.artists.items);
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getTrackSearchResults(String query) {
+        return new SpotifyApiResource<TracksPager, List<MusicListItem>>() {
+            @Override
+            protected Call<TracksPager> createCall() {
+                return apiService.searchForTracks(query);
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable TracksPager data) {
+                return parseTracks(data.tracks.items);
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getSearchResults(String query) {
+        return new SpotifyApiResource<SearchResultsPager, List<MusicListItem>>() {
+            @Override
+            protected Call<SearchResultsPager> createCall() {
+                return apiService.getSearchResults(query);
+            }
+
+            @Override
+            protected List<MusicListItem> processResponse(@Nullable SearchResultsPager data) {
+                return parseSearchResults(data);
+            }
+        }.getAsLiveData();
     }
 
     /** helpers **/
@@ -352,6 +384,15 @@ public class SpotifyRepo {
             artistsList.add(item);
         }
         return artistsList;
+    }
+
+    private List<MusicListItem> parseSearchResults(SearchResultsPager data) {
+        List<MusicListItem> results = new ArrayList<>();
+        List<MusicListItem> tracks = parseTracks(data.tracks.items);
+        List<MusicListItem> artists = parseArtists(data.artists.items);
+        results.addAll(tracks);
+        results.addAll(artists);
+        return results;
     }
 
     private String getIdList(List<MusicListItem> items) {

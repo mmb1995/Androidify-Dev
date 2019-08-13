@@ -2,10 +2,13 @@ package com.example.android.androidify.api;
 
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.ArtistTrackWrapper;
+import com.example.android.androidify.api.models.ArtistsPager;
 import com.example.android.androidify.api.models.Pager;
 import com.example.android.androidify.api.models.RelatedArtistsWrapper;
+import com.example.android.androidify.api.models.SearchResultsPager;
 import com.example.android.androidify.api.models.Track;
 import com.example.android.androidify.api.models.TrackWrapper;
+import com.example.android.androidify.api.models.TracksPager;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -47,6 +50,15 @@ public interface SpotifyWebService {
 
     @GET("me/tracks/contains")
     Call<Boolean[]> containsTrack(@Query("ids") String ids);
+
+    @GET("search?type=artist&limit=10")
+    Call<ArtistsPager> searchForArtists(@Query("q") String query);
+
+    @GET("search?type=track&limit=10")
+    Call<TracksPager> searchForTracks(@Query("q") String query);
+
+    @GET("search?type=track,artist&limit=10")
+    Call<SearchResultsPager> getSearchResults(@Query("q") String query);
 
     /** Put requests **/
 

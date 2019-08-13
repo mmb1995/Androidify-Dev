@@ -45,7 +45,6 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
 
     private static final String ARG_ARTIST_ID = "arg_artist_id";
     private static final String ARG_TIME_RANGE = "arg_time_range";
-    private static final String GET_TOP_ARTISTS = "get_top_artists";
 
     @BindView(R.id.artist_gallery_recycler_view)
     RecyclerView mArtistGalleryRv;
@@ -160,7 +159,7 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
             displayDropdown();
         } else {
             mDropdown.setVisibility(View.GONE);
-            mDropdownContainer.setVisibility(View.GONE );
+            mDropdownContainer.setVisibility(View.GONE);
             getRelatedArtists();
         }
     }

@@ -55,8 +55,13 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
     public void onBindViewHolder(@NonNull MusicListViewHolder holder, int pos) {
         MusicListItem item = mItems.get(pos);
         holder.mTitleTextView.setText(item.name);
-        holder.mArtistTextView.setText(item.artistName);
+        if (item.artistName != null) {
+            holder.mArtistTextView.setText(item.artistName);
+        } else {
+            holder.mArtistTextView.setText("Artist");
+        }
         holder.mLikeButton.setSelected(item.isLiked);
+        Log.i(TAG, item.name);
 
         /**
         if (mType.equals(Constants.TRACK)) {
@@ -72,10 +77,12 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
 
         List<Image> images = item.images;
 
-        Picasso.get()
-                .load(images.get(0).url)
-                .placeholder(R.color.imageLoadingColor)
-                .into(holder.mCoverArtImageView);
+        if (images != null && images.size() > 0) {
+            Picasso.get()
+                    .load(images.get(0).url)
+                    .placeholder(R.color.imageLoadingColor)
+                    .into(holder.mCoverArtImageView);
+        }
     }
 
     @Override
@@ -115,7 +122,6 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.mListener = listener;
-            Log.i(TAG, "Creating ViewHolder");
             mTrackInfo.setOnClickListener(this);
             mLikeButton.setOnClickListener(this);
         }

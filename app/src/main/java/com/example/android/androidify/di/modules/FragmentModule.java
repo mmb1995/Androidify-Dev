@@ -3,6 +3,7 @@ package com.example.android.androidify.di.modules;
 import com.example.android.androidify.fragments.ArtistFragment;
 import com.example.android.androidify.fragments.ArtistGalleryFragment;
 import com.example.android.androidify.fragments.HomeFragment;
+import com.example.android.androidify.fragments.SearchResultsFragment;
 import com.example.android.androidify.fragments.TopHistoryFragment;
 import com.example.android.androidify.fragments.TopHistoryListFragment;
 import com.example.android.androidify.fragments.TrackListFragment;
@@ -29,4 +30,7 @@ public abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract TrackListFragment contributesTrackListFragment();
+
+    @ContributesAndroidInjector
+    abstract SearchResultsFragment contributesSearchResultsFragment();
 }
