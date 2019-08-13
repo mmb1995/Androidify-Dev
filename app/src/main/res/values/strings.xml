@@ -6,6 +6,7 @@
     <string name="artist_unfollowed_message">Unfollowed artist!</string>
     <string name="artist_follow_error">Failed to follow artist</string>
     <string name="artist_unfollow_undo">Undo</string>
+    <string name="error_message">Failed to load results</string>
     <string name="now_playing_seekbar_default_text">0:00</string>
     <string name="top_history_artist_tab">Artists</string>
     <string name="top_history_track_tab">Tracks</string>
@@ -13,11 +14,17 @@
     <string name="top_history_dropdown_hint">Choose time range</string>
     <string name="track_liked_message">Liked! Track added to Liked Songs</string>
     <string name="track_unlike_message">Track removed from your library</string>
+    <string name="search_title">Search</string>
 
     <string-array name="top_history_dropdown_array">
         <item>All Time</item>
         <item>6 Months</item>
         <item>Last Month</item>
+    </string-array>
+
+    <string-array name="search_results_dropdown">
+        <item>Tracks</item>
+        <item>Artists</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

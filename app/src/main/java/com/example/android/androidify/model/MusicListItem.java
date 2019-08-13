@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.Image;
 import com.example.android.androidify.api.models.Track;
+import com.example.android.androidify.utils.Constants;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class MusicListItem implements Parcelable {
     public String id;
     public String uri;
     public String artistName;
+    public String type;
     public boolean isLiked;
 
     public MusicListItem() {}
@@ -25,6 +27,7 @@ public class MusicListItem implements Parcelable {
         this.uri = track.uri;
         this.images = track.album.images;
         this.artistName = track.artists.get(0).name;
+        this.type = Constants.TRACK;
     }
 
     public MusicListItem(Artist artist) {
@@ -33,6 +36,7 @@ public class MusicListItem implements Parcelable {
         this.images = artist.images;
         this.uri = artist.uri;
         this.artistName = null;
+        this.type = Constants.ARTIST;
     }
 
     @Override
