@@ -151,9 +151,10 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
             mDropdown.setVisibility(View.GONE);
             mDropdownContainer.setVisibility(View.GONE);
         }
-        getTracks();
+        //getTracks();
     }
 
+    /**
     private void getTracks() {
         switch (this.mType) {
             case Constants.ARTIST:
@@ -173,6 +174,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                 break;
         }
     }
+     **/
 
     private void handleTrackResponse(ApiResponse<List<MusicListItem>> response) {
         //Log.i(TAG, mRange + " " + mType);
@@ -190,13 +192,14 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                 mMusicListRecyclerView.setVisibility(View.VISIBLE);
                 this.mItems = response.data;
                 this.mAdapter.setItems(mItems);
-                getTracksSavedStatus(mItems);
+                //getTracksSavedStatus(mItems);
                 break;
             default:
                 break;
         }
     }
 
+    /**
     private void getTracksSavedStatus(List<MusicListItem> tracks) {
         mTrackViewModel.checkTracks(tracks).observe(this, (ApiResponse<Boolean[]> response) -> {
             switch (response.status) {
@@ -210,6 +213,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
             }
         });
     }
+     **/
 
     private void updateLikeStatus(Boolean[] likedTracks) {
         for (int i = 0; i < likedTracks.length; i++) {
@@ -231,6 +235,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
     @Override
     public void onLikeClicked(int position) {
         MusicListItem item = this.mAdapter.getItemAtPosition(position);
+        /**
         if (item.isLiked) {
             mTrackViewModel.removeTrack(item.id).observe(this, (ApiResponse<Void> response) -> {
                 handleLikeAction(item, position, response);
@@ -240,6 +245,7 @@ public class TrackListFragment extends Fragment implements ListItemClickListener
                 handleLikeAction(item, position, response);
             });
         }
+         **/
     }
 
     private void handleLikeAction(MusicListItem item, int position, ApiResponse<Void> response) {

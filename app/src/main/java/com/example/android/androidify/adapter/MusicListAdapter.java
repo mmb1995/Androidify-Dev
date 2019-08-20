@@ -82,6 +82,9 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
                     .load(images.get(0).url)
                     .placeholder(R.color.imageLoadingColor)
                     .into(holder.mCoverArtImageView);
+        } else {
+            // There are no images available
+            holder.mCoverArtImageView.setVisibility(View.GONE);
         }
     }
 
@@ -101,6 +104,18 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.Musi
     public void setItems(List<MusicListItem> items) {
         this.mItems = items;
         this.notifyDataSetChanged();
+    }
+
+    /**
+     * Update the saved status for the track at the given position and notify the adapter
+     * @param position
+     */
+    public void toggleTrackSaved(int position) {
+        if (mItems != null && position < mItems.size()) {
+            MusicListItem item = mItems.get(position);
+            item.isLiked = !item.isLiked;
+            this.notifyItemChanged(position);
+        }
     }
 
     public class MusicListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

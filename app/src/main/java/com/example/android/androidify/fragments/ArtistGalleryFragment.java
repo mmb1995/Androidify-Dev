@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.adapter.ArtistGalleryAdapter;
+import com.example.android.androidify.adapter.MaterialSpinnerAdapter;
 import com.example.android.androidify.api.ApiResponse;
 import com.example.android.androidify.interfaces.MusicPlaybackClickListener;
 import com.example.android.androidify.model.MusicListItem;
@@ -113,7 +114,7 @@ public class ArtistGalleryFragment extends Fragment implements MusicPlaybackClic
     private void displayDropdown() {
         String[] dropdownArray = getResources().getStringArray(R.array.top_history_dropdown_array);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        MaterialSpinnerAdapter<String> adapter = new MaterialSpinnerAdapter<>(
                 getContext(),
                 R.layout.item_dropdown_menu,
                 dropdownArray

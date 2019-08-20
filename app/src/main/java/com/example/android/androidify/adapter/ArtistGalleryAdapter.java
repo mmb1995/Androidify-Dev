@@ -67,6 +67,7 @@ public class ArtistGalleryAdapter extends RecyclerView.Adapter<ArtistGalleryAdap
         if (mArtistItems != null && position < mArtistItems.size()) {
             return mArtistItems.get(position);
         }
+
         return null;
     }
 

@@ -1,5 +1,6 @@
 package com.example.android.androidify.api;
 
+import com.example.android.androidify.api.models.Album;
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.ArtistTrackWrapper;
 import com.example.android.androidify.api.models.ArtistsPager;
@@ -26,6 +27,9 @@ public interface SpotifyWebService {
 
     @GET("artists/{id}/related-artists")
     Call<RelatedArtistsWrapper> getRelatedArtists(@Path("id") String artistId);
+
+    @GET("artists/{id}/albums?include_groups=album")
+    Call<Pager<Album>> getArtistAlbums(@Path("id") String artistId);
 
     @GET("me/following/contains?type=artist")
     Call<Boolean[]> isFollowingArtist(@Query("ids") String ids);
@@ -59,6 +63,12 @@ public interface SpotifyWebService {
 
     @GET("search?type=track,artist&limit=10")
     Call<SearchResultsPager> getSearchResults(@Query("q") String query);
+
+    @GET("albums/{id}?market=from_token")
+    Call<Album> getAlbum(@Path("id") String id);
+
+    @GET("albums/{id}/tracks")
+    Call<Pager<Track>> getAlbumTracks(@Path("id") String id);
 
     /** Put requests **/
 

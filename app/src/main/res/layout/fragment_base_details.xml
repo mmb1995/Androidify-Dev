@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        style="Widget.MaterialComponents.CardView"
+        android:id="@+id/details_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:elevation="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/details_backdrop_image"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:alpha="0.9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/details_card_guidline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="300dp"/>
+
+            <TextView
+                android:id="@+id/details_header_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:textSize="25sp"
+                android:textColor="@color/textBold"
+                app:layout_constraintTop_toBottomOf="@id/details_play_button"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/details_info_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@id/details_header_text_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageButton
+                style="@style/NowPlayingSelectableButton"
+                android:id="@+id/details_favorite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/checkbox_follow"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/details_play_button"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/details_play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                app:tint="@color/textBold"
+                app:layout_constraintTop_toBottomOf="@id/details_backdrop_image"
+                app:layout_constraintBottom_toTopOf="@id/details_card_guidline"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/ic_play_circle_24px"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.tabs.TabLayout
+        style="@style/Widget.MaterialComponents.TabLayout"
+        android:id="@+id/details_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/default_margin"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_margin"
+        android:elevation="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        app:tabTextColor="@color/textBold" />
+
+    <com.example.android.androidify.view.CustomViewPager
+        android:id="@+id/details_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
