@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">androidify</string>
     <string name="artist_tracks_tab_label">Popular</string>
-    <string name="artist_related_tab_label">Related Artists</string>
+    <string name="artist_related_tab_label">Related</string>
+    <string name="artist_albums_tab">Albums</string>
     <string name="artist_followed_message">Now following artist!</string>
     <string name="artist_unfollowed_message">Unfollowed artist!</string>
     <string name="artist_follow_error">Failed to follow artist</string>
@@ -23,6 +24,11 @@
     </string-array>
 
     <string-array name="search_results_dropdown">
+        <item>Tracks</item>
+        <item>Artists</item>
+    </string-array>
+
+    <string-array name="album_tab_labels">
         <item>Tracks</item>
         <item>Artists</item>
     </string-array>

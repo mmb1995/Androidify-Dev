@@ -1,5 +1,7 @@
 package com.example.android.androidify.viewmodel;
 
+import android.util.Log;
+
 import com.example.android.androidify.api.ApiResponse;
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.model.MusicListItem;
@@ -10,38 +12,44 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class ArtistViewModel extends ViewModel {
     private static final String TAG = "ARTIST_VIEW_MODEL";
 
-    private LiveData<Artist> mArtist;
-    //private LiveData<ApiResponse<List<MusicListItem>>> mArtistTopTracks;
+    private LiveData<ApiResponse<Artist>> mArtist;
     private LiveData<ApiResponse<List<MusicListItem>>> mRelatedArtists;
-    private MutableLiveData<Boolean> mIsFollowingArtist;
-    private final SpotifyRepo mSpotifyRepo;
+    private MediatorLiveData<Boolean> mIsFollowingArtist;
+    private SpotifyRepo mSpotifyRepo;
 
     @Inject
     public ArtistViewModel(SpotifyRepo repo) {
         this.mSpotifyRepo = repo;
     }
 
-    public LiveData<Artist> getArtist(String artistId) {
+
+    public void init(String id) {
         if (mArtist == null) {
-            mArtist = mSpotifyRepo.getArtist(artistId);
+            Log.i(TAG, "getting artist data");
+            mArtist = mSpotifyRepo.getArtist(id);
         }
-        return mArtist;
+
+        if (mIsFollowingArtist == null) {
+            mIsFollowingArtist = new MediatorLiveData<>();
+            LiveData<ApiResponse<Boolean>> followStatus = mSpotifyRepo.isFollowingArtist(id);
+            mIsFollowingArtist.addSource(followStatus, response -> {
+                if (response != null && response.status == ApiResponse.Status.SUCCESS) {
+                    mIsFollowingArtist.removeSource(followStatus);
+                    mIsFollowingArtist.setValue(response.data);
+                }
+            });
+        }
     }
 
-    /**
-    public LiveData<ApiResponse<ArrayList<MusicListItem>>> getArtistTopTracks(String artistId) {
-        if (mArtistTopTracks == null) {
-            mArtistTopTracks = mSpotifyRepo.getTopTracksByArtist(artistId);
-        }
-        return mArtistTopTracks;
+    public LiveData<ApiResponse<Artist>> getArtist() {
+        return mArtist;
     }
-     **/
 
     public LiveData<ApiResponse<List<MusicListItem>>> getRelatedArtists(String artistId) {
         if (mRelatedArtists == null) {
@@ -50,11 +58,34 @@ public class ArtistViewModel extends ViewModel {
         return mRelatedArtists;
     }
 
-    public LiveData<Boolean> getArtistFollowStatus(String artistId) {
-        if (mIsFollowingArtist == null) {
-            mIsFollowingArtist = mSpotifyRepo.isFollowingArtist(artistId);
-        }
+    public LiveData<Boolean> getArtistFollowStatus() {
         return mIsFollowingArtist;
+    }
+
+    public void toggleArtistFollow(String id) {
+        LiveData<ApiResponse<Boolean>> following = mSpotifyRepo.isFollowingArtist(id);
+        mIsFollowingArtist.addSource(following, isFollowing -> {
+            if (isFollowing != null) {
+                if (isFollowing.status == ApiResponse.Status.SUCCESS) {
+                    mIsFollowingArtist.removeSource(following);
+                    LiveData<ApiResponse<Void>> updateArtist;
+                    boolean followStatus;
+                    if (isFollowing.data) {
+                        updateArtist = mSpotifyRepo.unfollowArtist(id);
+                        followStatus = false;
+                    } else {
+                        updateArtist = mSpotifyRepo.followArtist(id);
+                        followStatus = true;
+                    }
+                    mIsFollowingArtist.addSource(updateArtist, response -> {
+                        if (response != null && response.status == ApiResponse.Status.SUCCESS) {
+                            mIsFollowingArtist.removeSource(updateArtist);
+                            mIsFollowingArtist.setValue(followStatus);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public LiveData<ApiResponse<Void>> followArtist(String artistId) {
@@ -72,10 +103,5 @@ public class ArtistViewModel extends ViewModel {
     public Boolean getFollowing() {
         return mIsFollowingArtist.getValue();
     }
-
-    public LiveData<ApiResponse<Boolean[]>> checkTracks(List<MusicListItem> tracks) {
-        return mSpotifyRepo.containsTracks(tracks);
-    }
-
 
 }

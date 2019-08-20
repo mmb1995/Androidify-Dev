@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.android.androidify.fragments.ArtistFragment;
+import com.example.android.androidify.fragments.Details.AlbumFragment;
+import com.example.android.androidify.fragments.Details.ArtistDetailsFragment;
+import com.example.android.androidify.fragments.Details.BaseDetailsFragment;
 import com.example.android.androidify.fragments.HomeFragment;
 import com.example.android.androidify.fragments.SearchResultsFragment;
 import com.example.android.androidify.fragments.TopHistoryFragment;
@@ -219,10 +221,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        AndroidInjection.inject(this);
         setSupportActionBar(mToolbar);
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mSeekBar.setEnabled(false);
@@ -300,9 +302,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mViewModel.getCurrentArtistId().observe(this, new EventObserver<String>(artistId -> {
             displayArtistFragment(artistId);
         }));
+
+        mViewModel.getAlbumNavigationEvent().observe(this, new EventObserver<String>(albumId -> {
+            displayAlbumFragment(albumId);
+        }));
+
         mViewModel.getCurrentlyPlaying().observe(this, (String uri) -> {
             onPlayUri(uri);
         });
+
         mViewModel.getSnackbarEvent().observe(this, new EventObserver<String>(message -> {
             onSnackBarEvent(message);
         }));
@@ -403,12 +411,27 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         transaction.commit();
     }
 
+    /**
     private void displayArtistFragment(String id) {
         Fragment artistFragment = ArtistFragment.newInstance(id);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment_container, artistFragment)
                 .addToBackStack(null);
         transaction.commit();
+    }
+     **/
+
+    private void displayArtistFragment(String id) {
+        Fragment artistFragment = ArtistDetailsFragment.newInstance(id);
+        displayFragment(artistFragment, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    }
+
+    private void displayAlbumFragment(String id) {
+        Fragment albumFragment = new AlbumFragment();
+        Bundle args = new Bundle();
+        args.putString(BaseDetailsFragment.ARG_ID, id);
+        albumFragment.setArguments(args);
+        displayFragment(albumFragment, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
     }
 
     private void displayTopHistory() {
@@ -425,6 +448,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         transaction.replace(R.id.main_fragment_container, searchFragment)
                 .addToBackStack(null);
         transaction.commit();
+    }
+
+    private void displayFragment(Fragment fragment, int transition) {
+        Log.i(TAG, "displaying new fragment");
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_fragment_container, fragment)
+                .setTransition(transition)
+                .addToBackStack(null)
+                .commit();
     }
 
     /**

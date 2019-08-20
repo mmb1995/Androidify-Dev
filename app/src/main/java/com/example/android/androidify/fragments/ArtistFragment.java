@@ -18,11 +18,9 @@ import com.example.android.androidify.view.CustomViewPager;
 import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
 import com.example.android.androidify.viewmodel.MainActivityViewModel;
-import com.example.android.androidify.viewmodel.MusicPlaybackViewModel;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.shape.MaterialShapeDrawable;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -124,16 +122,25 @@ public class ArtistFragment extends Fragment {
 
     private void getArtistDetails() {
         mModel = ViewModelProviders.of(this, mFactoryViewModel).get(ArtistViewModel.class);
+        mModel.init(mArtistId);
 
         // Set up observers
-        mModel.getArtist(mArtistId).observe(this, (Artist artist) -> {
-            if (artist != null) {
-                this.mArtist = artist;
-                setupUi();
+        mModel.getArtist().observe(this, response -> {
+            if (response != null) {
+                switch (response.status) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        this.mArtist = response.data;
+                        setupUi();
+                        break;
+                    case ERROR:
+                        break;
+                }
             }
         });
 
-        mModel.getArtistFollowStatus(mArtistId).observe(this, (Boolean isFollowing) -> {
+        mModel.getArtistFollowStatus().observe(this, (Boolean isFollowing) -> {
             if (isFollowing != null) {
                 setFollowButton(isFollowing);
             }
@@ -180,6 +187,11 @@ public class ArtistFragment extends Fragment {
     }
 
     private void onFollowClicked() {
+        mModel.toggleArtistFollow(mArtistId);
+    }
+
+    /**
+    private void onFollowClicked() {
         removeFollowObservers();
         Boolean following = mModel.getFollowing();
         if (!following) {
@@ -201,6 +213,7 @@ public class ArtistFragment extends Fragment {
             mModel.unfollowArtist(this.mArtistId).removeObservers(this);
         }
     }
+     **/
 
     private void setFollowButton(Boolean following) {
         mFavoriteButton.setChecked(following);

@@ -3,8 +3,8 @@ package com.example.android.androidify.adapter;
 import android.content.Context;
 
 import com.example.android.androidify.R;
-import com.example.android.androidify.fragments.ArtistGalleryFragment;
-import com.example.android.androidify.fragments.TrackListFragment;
+import com.example.android.androidify.fragments.list.ImageGalleryFragment;
+import com.example.android.androidify.fragments.tracks.TracksFragment;
 import com.example.android.androidify.utils.Constants;
 
 import androidx.annotation.NonNull;
@@ -29,11 +29,11 @@ public class TopHistoryPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ArtistGalleryFragment.newInstance(null, Constants.MEDIUM_TERM);
+                return ImageGalleryFragment.newInstance(null, Constants.TOP_ARTISTS);
             case 1:
-                return TrackListFragment.newInstance(null, Constants.TOP_TRACKS, Constants.MEDIUM_TERM);
+                return TracksFragment.newInstance(null, Constants.TOP_TRACKS);
             case 2:
-                return TrackListFragment.newInstance(null, Constants.RECENTLY_PLAYED, null);
+                return TracksFragment.newInstance(null, Constants.RECENTLY_PLAYED);
             default:
                 return null;
         }

@@ -3,6 +3,7 @@ package com.example.android.androidify.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.android.androidify.api.models.Album;
 import com.example.android.androidify.api.models.Artist;
 import com.example.android.androidify.api.models.Image;
 import com.example.android.androidify.api.models.Track;
@@ -25,7 +26,7 @@ public class MusicListItem implements Parcelable {
         this.name = track.name;
         this.id = track.id;
         this.uri = track.uri;
-        this.images = track.album.images;
+        this.images = track.album != null ? track.album.images : null;
         this.artistName = track.artists.get(0).name;
         this.type = Constants.TRACK;
     }
@@ -37,6 +38,15 @@ public class MusicListItem implements Parcelable {
         this.uri = artist.uri;
         this.artistName = null;
         this.type = Constants.ARTIST;
+    }
+
+    public MusicListItem(Album album) {
+        this.name = album.name;
+        this.id = album.id;
+        this.images = album.images;
+        this.uri = album.uri;
+        this.artistName = album.artists.get(0).name;
+        this.type = Constants.ALBUM;
     }
 
     @Override

@@ -5,9 +5,11 @@
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
     app:boxStrokeColor="@android:color/transparent">
 
     <AutoCompleteTextView
+        style="Widget.MaterialComponents.AutoCompleteTextView.FilledBox"
         android:id="@+id/filled_exposed_dropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,9 +1,11 @@
 package com.example.android.androidify.di.modules;
 
 import com.example.android.androidify.di.ViewModelKey;
+import com.example.android.androidify.viewmodel.AlbumViewModel;
 import com.example.android.androidify.viewmodel.ArtistGalleryViewModel;
 import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
+import com.example.android.androidify.viewmodel.ImageGalleryViewModel;
 import com.example.android.androidify.viewmodel.SearchViewModel;
 import com.example.android.androidify.viewmodel.TrackListViewModel;
 import com.example.android.androidify.viewmodel.UserHistoryViewModel;
@@ -34,6 +36,11 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(AlbumViewModel.class)
+    abstract ViewModel bindsAlbumViewModel(AlbumViewModel albumViewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(ArtistGalleryViewModel.class)
     abstract ViewModel bindsArtistGalleryViewModel(ArtistGalleryViewModel artistGalleryViewModel);
 
@@ -41,6 +48,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TrackListViewModel.class)
     abstract ViewModel bindsTrackListViewModel(TrackListViewModel trackListViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ImageGalleryViewModel.class)
+    abstract ViewModel bindsImageGalleryViewModel(ImageGalleryViewModel imageGalleryViewModel);
 
     @Binds
     @IntoMap

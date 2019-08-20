@@ -3,8 +3,8 @@ package com.example.android.androidify.adapter;
 import android.content.Context;
 
 import com.example.android.androidify.R;
-import com.example.android.androidify.fragments.ArtistGalleryFragment;
-import com.example.android.androidify.fragments.TrackListFragment;
+import com.example.android.androidify.fragments.list.ImageGalleryFragment;
+import com.example.android.androidify.fragments.tracks.TracksFragment;
 import com.example.android.androidify.utils.Constants;
 
 import androidx.fragment.app.Fragment;
@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class ArtistPageAdapter extends FragmentPagerAdapter {
-    private static final int NUM_ITEMS = 2;
+    private static final int NUM_ITEMS = 3;
     private final Context mContext;
     private String mId;
 
@@ -27,9 +27,11 @@ public class ArtistPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TrackListFragment.newInstance(mId, Constants.ARTIST, null);
+                return TracksFragment.newInstance(mId, Constants.ARTIST);
             case 1:
-                return ArtistGalleryFragment.newInstance(mId, null);
+                return ImageGalleryFragment.newInstance(mId, Constants.ARTIST);
+            case 2:
+                return ImageGalleryFragment.newInstance(mId, Constants.ALBUM);
             default:
                 return null;
         }
@@ -47,6 +49,8 @@ public class ArtistPageAdapter extends FragmentPagerAdapter {
                 return  mContext.getString(R.string.artist_tracks_tab_label);
             case 1:
                 return mContext.getString(R.string.artist_related_tab_label);
+            case 2:
+                return mContext.getString(R.string.artist_albums_tab);
             default:
                 return null;
         }
