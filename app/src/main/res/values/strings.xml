@@ -5,22 +5,76 @@
     <string name="artist_albums_tab">Albums</string>
     <string name="artist_followed_message">Now following artist!</string>
     <string name="artist_unfollowed_message">Unfollowed artist!</string>
+    <string name="album_follow_message">Now following album!</string>
+    <string name="album_unfollow_message">Album removed from your library</string>
     <string name="artist_follow_error">Failed to follow artist</string>
     <string name="artist_unfollow_undo">Undo</string>
-    <string name="error_message">Failed to load results</string>
+    <string name="error_message">Oh no! something went wrong</string>
+    <string name="playback_error">Playback Error</string>
     <string name="now_playing_seekbar_default_text">0:00</string>
     <string name="top_history_artist_tab">Artists</string>
     <string name="top_history_track_tab">Tracks</string>
     <string name="top_history_recent_tab">Recent</string>
     <string name="top_history_dropdown_hint">Choose time range</string>
-    <string name="track_liked_message">Liked! Track added to Liked Songs</string>
+    <string name="track_liked_message">Liked! Track saved to your library</string>
     <string name="track_unlike_message">Track removed from your library</string>
+    <string name="top_history_label">History</string>
+    <string name="search_fragment_label">Search</string>
+    
+    <!-- modal bottom sheet -->
+    <string name="action_like">Like</string>
+    <string name="action_open_spotify">View in Spotify</string>
+    <string name="action_share">Share</string>
+
+    <!-- Nav drawer -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_closed">Closed</string>
+    
+    <!-- Toolbar title -->
+    <string name="top_history_title">History</string>
+    <string name="artist_title">Artist</string>
+    <string name="album_title">Album</string>
+    <string name="library_title">Library</string>
+    <string name="playlist_title">Playlist</string>
+    <string name="track_title">Track</string>
     <string name="search_title">Search</string>
+
+    <!-- MediaItem resources -->
+    <string name="empty_response_message">No data found</string>
+
+    <!-- Playlists -->
+    <string name="playlist_follow_message">Now following Playlist!</string>
+    <string name="playlist_unfollow_message">Playlist removed from your library</string>
+
+    <!-- search resources -->
+    <string name="action_search_title">Search</string>
+    <string name="search_hint">Search for songs, artists, and albums</string>
+    <string name="search_empty_message">No Results</string>
+
+    <!-- Recommendation resources -->
+    <string name="recommendations_title">Recommendations</string>
 
     <string-array name="top_history_dropdown_array">
         <item>All Time</item>
         <item>6 Months</item>
         <item>Last Month</item>
+    </string-array>
+
+    <string-array name="library_tab_labels">
+        <item>Albums</item>
+        <item>Artists</item>
+        <item>Tracks</item>
+        <item>Playlists</item>
+    </string-array>
+
+    <string-array name="full_library_tab_labels">
+        <item>Albums</item>
+        <item>Artists</item>
+        <item>Tracks</item>
+        <item>Playlists</item>
+        <item>Top Artists</item>
+        <item>Top Tracks</item>
+        <item>Recent</item>
     </string-array>
 
     <string-array name="search_results_dropdown">
@@ -33,6 +87,10 @@
         <item>Artists</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="search_tab_labels">
+        <item>Tracks</item>
+        <item>Artists</item>
+        <item>Albums</item>
+    </string-array>
+
 </resources>

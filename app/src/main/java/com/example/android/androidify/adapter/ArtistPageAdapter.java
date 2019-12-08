@@ -3,8 +3,8 @@ package com.example.android.androidify.adapter;
 import android.content.Context;
 
 import com.example.android.androidify.R;
-import com.example.android.androidify.fragments.list.ImageGalleryFragment;
-import com.example.android.androidify.fragments.tracks.TracksFragment;
+import com.example.android.androidify.fragments.artist.ArtistGalleryFragment;
+import com.example.android.androidify.fragments.tracks.TrackListFragment;
 import com.example.android.androidify.utils.Constants;
 
 import androidx.fragment.app.Fragment;
@@ -27,13 +27,14 @@ public class ArtistPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TracksFragment.newInstance(mId, Constants.ARTIST);
+                return TrackListFragment.newInstance(mId, Constants.ARTIST);
             case 1:
-                return ImageGalleryFragment.newInstance(mId, Constants.ARTIST);
+                return ArtistGalleryFragment.newInstance(mId, Constants.TYPE_RELATED_ARTISTS);
             case 2:
-                return ImageGalleryFragment.newInstance(mId, Constants.ALBUM);
+                return ArtistGalleryFragment.newInstance(mId, Constants.TYPE_ARTIST_ALBUMS);
             default:
                 return null;
+
         }
     }
 

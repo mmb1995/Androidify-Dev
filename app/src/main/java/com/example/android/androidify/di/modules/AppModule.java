@@ -9,6 +9,7 @@ import dagger.Provides;
 
 @Module(includes = {
         ApiModule.class,
+        DataSourceModule.class,
         RepositoryModule.class,
         LocalStorageModule.class,
         ViewModelModule.class

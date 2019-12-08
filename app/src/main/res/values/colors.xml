@@ -10,13 +10,17 @@
     <color name="colorOnPrimary">#000000</color>
     <color name="colorOnSecondary">#000000</color>
     <color name="colorOnSurface">#FFFFFF</color>
+    <color name="defaultNowPlayingBackground">#8c0000</color>
     <color name="textPrimary">#ffffff</color>
     <color name="textBold">#FFFFFF</color>
     <color name="textSecondary">#D3D3D3</color>
     <color name="rippleColor">#212121</color>
+    <color name="collapsingToolbarContentScrim">#2b2b2b</color>
     <color name="scrimStart">#CC000000</color>
     <color name="scrimCenter">#66000000</color>
     <color name="scrimEnd">#000000</color>
+    <color name="scrimBackground">#99000000</color>
+    <color name="dimmerColor">#99000000</color>
     <color name="nowPlayingBarColor">#212121</color>
     <color name="imageLoadingColor">#212121</color>
 

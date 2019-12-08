@@ -8,31 +8,49 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
-        <item name="autoCompleteTextViewStyle">@style/customAutoCompleteTextViewStyle</item>
+        <item name="snackbarStyle">@style/CustomSnackBarStyle</item>
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
     </style>
 
-    <style name="customAutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:popupBackground">@color/imageLoadingColor</item>
+    <style name="CustomSnackBarStyle" parent="Widget.MaterialComponents.Snackbar.FullWidth" tools:override="true">
+    </style>
+
+    <style name="MaterialMusicCard" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_margin">@dimen/mtr_music_card_dimen</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <!--
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light">
-
-    </style>
-    !-->
-
-    <style name="NowPlayingBarStyle" parent="Theme.MaterialComponents">
-        <item name="enforceTextAppearance">true</item>
-        <item name="enforceMaterialTheme">true</item>
-        <item name="android:background">@color/colorSurface</item>
+    <style name="MusicCardImage">
+        <item name="android:scaleType">centerCrop</item>
     </style>
 
-    <style name="ArtistTextStyle" parent="TextAppearance.AppCompat">
-        <item name="android:elevation">4dp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="MusicCardImage.Small">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">200dp</item>
+    </style>
+
+    <style name="MusicCardText" parent="EllipsizeTextView">
+        <item name="android:layout_marginStart">@dimen/default_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:alpha">1</item>
     </style>
+
+    <style name="MusicCardText.Header">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="MusicCardText.Secondary">
+        <item name="android:textSize">13sp</item>
+        <item name="android:alpha">1</item>
+    </style>
+
 
     <style name="ButtonStyle" parent="TextAppearance.AppCompat">
         <item name="android:clickable">true</item>
@@ -42,77 +60,119 @@
         <item name="android:padding">@dimen/default_padding</item>
     </style>
 
-    <style name="TopHistoryTextStyle" parent="TextAppearance.AppCompat">
-        <item name="android:maxWidth">145dp</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TopHistoryTextStyle.Secondary">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="TopHistoryListStyle" parent="TextAppearance.AppCompat">
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
-    </style>
-
     <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_gravity">center</item>
     </style>
 
-    <style name="MusicListItemTextStyle">
+    <style name="MusicListItemTextStyle" parent="@style/EllipsizeTextView">
         <item name="android:textColor">@color/textBold</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:alpha">@dimen/mtrl_emphasis_high_type</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="MusicListItemTextStyle.Secondary">
+        <item name="android:textSize">13sp</item>
         <item name="android:alpha">@dimen/mtrl_emphasis_medium</item>
     </style>
-    
-    <style name="NowPlayingIconButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
-        <item name="iconGravity">textStart</item>
-        <item name="strokeColor">@android:color/transparent</item>
-        <item name="iconTint">@color/now_playing_icon_color_selector</item>
-        <item name="rippleColor">@color/now_playing_button_ripple_color</item>
+
+
+    <style name="NowPlayingControlButton">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:tint">@color/now_playing_selectable_image_button_color</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+    </style>
+
+    <style name="NowPlayingControlButton.Small">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="NowPlayingControlButton.Normal">
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_width">64dp</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="NowPlayingControlButton.Large">
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="android:elevation">6dp</item>
     </style>
 
     <style name="NowPlayingSelectableButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
         <item name="android:tint">@color/now_playing_selectable_image_button_color</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="NowPlayingTextStyle" parent="TextAppearance.AppCompat">
         <item name="android:text">@string/now_playing_seekbar_default_text</item>
+        <item name="android:alpha">@dimen/mtrl_emphasis_bold</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:alpha">@dimen/mtrl_emphasis_high_type</item>
     </style>
 
-    <style name="SnackBarStyle" parent="Widget.MaterialComponents.Snackbar" tools:override="true">
-        <item name="android:paddingBottom">45dp</item>
+    <style name="NowPlayingCardText" parent="TextAppearance.AppCompat">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginStart">@dimen/marquee_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/marquee_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/marquee_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/marquee_horizontal_margin</item>
     </style>
 
-    <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary" tools:override="true">
-        <item name="android:contentInsetLeft">0dp</item>
-        <item name="android:contentInsetStart">0dp</item>
-        <item name="contentInsetLeft">0dp</item>
-        <item name="contentInsetStart">0dp</item>
-        <item name="contentInsetStartWithNavigation">0dp</item>
+    <style name="NowPlayingCardText.Title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:alpha">@dimen/mtrl_emphasis_bold</item>
+    </style>
+
+    <style name="NowPlayingCardText.Artist">
+        <item name="android:textSize">16sp</item>
+        <item name="android:alpha">@dimen/mtrl_emphasis_medium</item>
+    </style>
+
+    <style name="NowPlayingSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">@color/colorOnSurface</item>
+        <item name="android:thumbTint">@color/colorOnSurface</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="EmptyStyle" parent="TextAppearance.MaterialComponents.Headline6" >
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TabStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:elevation">3dp</item>
+        <item name="tabSelectedTextColor">@color/textBold</item>
+    </style>
+
+
+    <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:elevation">6dp</item>
+    </style>
+
+    <style name="EllipsizeTextView" parent="TextAppearance.AppCompat">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>
 
 <!--
+
+                <item name="tabPaddingStart">@dimen/default_padding</item>
+        <item name="tabPaddingEnd">@dimen/default_padding</item>
+
+
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">50dp</item>
 

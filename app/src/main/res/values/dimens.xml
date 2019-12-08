@@ -3,7 +3,12 @@
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_padding">8dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="now_playing_margin">16dp</dimen>
+    <dimen name="now_playing_margin">8dp</dimen>
+    <dimen name="marquee_horizontal_margin">16dp</dimen>
+    <dimen name="mtr_music_card_dimen">4dp</dimen>
+    <dimen name="viewpager_margin">4dp</dimen>
+    <dimen name="bottom_sheet_peek_height">64dp</dimen>
+    <dimen name="recyler_view_item_padding">4dp</dimen>
 
     <!-- Dimensions for low ripple overlays, used on top of surface. -->
     <item name="mtrl_low_ripple_pressed_alpha" format="float" type="dimen">0.12</item>
@@ -16,10 +21,12 @@
     <item name="mtrl_high_ripple_hovered_alpha" format="float" type="dimen">0.08</item>
     <item name="mtrl_high_ripple_default_alpha" format="float" type="dimen">0.00</item>
 
+    <item name="mtrl_emphasis_bold" format="float" type="dimen">0.95</item>
+
     <!-- High emphasis of 87% for type. -->
     <item name="mtrl_emphasis_high_type" format="float" type="dimen">0.87</item>
     <!-- Medium emphasis of 60% is the same for type and icon. -->
-    <item name="mtrl_emphasis_medium" format="float" type="dimen">0.6</item>
+    <item name="mtrl_emphasis_medium" format="float" type="dimen">0.7</item>
     <!-- Disabled emphasis of 38% is the same for type and icon. -->
     <item name="mtrl_emphasis_disabled" format="float" type="dimen">0.38</item>
 </resources>

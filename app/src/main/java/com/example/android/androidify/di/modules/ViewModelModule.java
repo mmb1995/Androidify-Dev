@@ -2,14 +2,18 @@ package com.example.android.androidify.di.modules;
 
 import com.example.android.androidify.di.ViewModelKey;
 import com.example.android.androidify.viewmodel.AlbumViewModel;
-import com.example.android.androidify.viewmodel.ArtistGalleryViewModel;
 import com.example.android.androidify.viewmodel.ArtistViewModel;
 import com.example.android.androidify.viewmodel.FactoryViewModel;
 import com.example.android.androidify.viewmodel.ImageGalleryViewModel;
+import com.example.android.androidify.viewmodel.LibraryViewModel;
+import com.example.android.androidify.viewmodel.MainActivityViewModel;
+import com.example.android.androidify.viewmodel.MediaItemDetailsViewModel;
+import com.example.android.androidify.viewmodel.PlaylistViewModel;
+import com.example.android.androidify.viewmodel.RecommendationsViewModel;
 import com.example.android.androidify.viewmodel.SearchViewModel;
+import com.example.android.androidify.viewmodel.TopHistoryViewModel;
 import com.example.android.androidify.viewmodel.TrackListViewModel;
-import com.example.android.androidify.viewmodel.UserHistoryViewModel;
-import com.example.android.androidify.viewmodel.UserLibraryViewModel;
+import com.example.android.androidify.viewmodel.TracksViewModel;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,15 +23,6 @@ import dagger.multibindings.IntoMap;
 
 @Module
 public abstract class ViewModelModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(UserHistoryViewModel.class)
-    abstract ViewModel bindUserHistoryViewModel(UserHistoryViewModel userHistoryViewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(UserLibraryViewModel.class)
-    abstract ViewModel bindUserLibraryViewModel(UserLibraryViewModel userLibraryViewModel);
 
     @Binds
     @IntoMap
@@ -41,13 +36,43 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ArtistGalleryViewModel.class)
-    abstract ViewModel bindsArtistGalleryViewModel(ArtistGalleryViewModel artistGalleryViewModel);
+    @ViewModelKey(LibraryViewModel.class)
+    abstract ViewModel bindsLibraryViewModel(LibraryViewModel libraryViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlaylistViewModel.class)
+    abstract ViewModel bindsPlaylistViewModel(PlaylistViewModel playlistViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainActivityViewModel.class)
+    abstract ViewModel bindsMainActivityViewModel(MainActivityViewModel mainActivityViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MediaItemDetailsViewModel.class)
+    abstract ViewModel bindsMediaItemDetailsViewModel(MediaItemDetailsViewModel mediaItemDetailsViewModel);
 
     @Binds
     @IntoMap
     @ViewModelKey(TrackListViewModel.class)
     abstract ViewModel bindsTrackListViewModel(TrackListViewModel trackListViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TracksViewModel.class)
+    abstract ViewModel bindsTracksViewModel(TracksViewModel tracksViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RecommendationsViewModel.class)
+    abstract ViewModel bindsRecommendationsViewModel(RecommendationsViewModel recommendationsViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TopHistoryViewModel.class)
+    abstract ViewModel bindsTopHistoryViewModel(TopHistoryViewModel topHistoryViewModel);
 
     @Binds
     @IntoMap

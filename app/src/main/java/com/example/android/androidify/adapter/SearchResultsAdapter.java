@@ -12,7 +12,6 @@ import com.example.android.androidify.R;
 import com.example.android.androidify.api.models.Image;
 import com.example.android.androidify.interfaces.SearchResultClickListener;
 import com.example.android.androidify.model.MusicListItem;
-import com.example.android.androidify.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -46,12 +45,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(@NonNull SearchResultsViewHolder holder, int position) {
         MusicListItem result = mSearchResults.get(position);
         holder.mSearchName.setText(result.name);
-        holder.mSearchType.setText(result.type);
+        holder.mSearchType.setText("track");
 
         List<Image> images = result.images;
 
         if (images != null && images.size() > 0) {
-            if (result.type.equals(Constants.ARTIST)) {
+            if (result.type == MusicListItem.Type.ARTIST) {
                 // Make artist search results have circular images
                 Log.i(TAG, "making circular image");
                 holder.mSearchImage.setBackgroundResource(R.drawable.circular_image);
@@ -94,10 +93,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         @BindView(R.id.search_name)
         TextView mSearchName;
 
-        @BindView(R.id.search_result_type)
+        @BindView(R.id.search_result_secondary_text_view)
         TextView mSearchType;
 
-        private SearchResultClickListener mListener;
+        private final SearchResultClickListener mListener;
 
         public SearchResultsViewHolder(@NonNull View itemView, SearchResultClickListener listener) {
             super(itemView);

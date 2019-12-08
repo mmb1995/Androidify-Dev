@@ -28,7 +28,11 @@ public abstract class SpotifyApiResource<RequestType, ResultType> {
                     result.setValue(ApiResponse.success(processResponse(response.body())));
                 } else {
                     Log.e(TAG, response.message());
-                    onFailure(call, new Throwable(response.message()));
+                    if (response.code() == 401) {
+                        result.setValue(ApiResponse.unauthorized());
+                    } else {
+                        onFailure(call, new Throwable(response.message()));
+                    }
                 }
             }
 
@@ -39,6 +43,7 @@ public abstract class SpotifyApiResource<RequestType, ResultType> {
             }
         });
     }
+
 
     public final LiveData<ApiResponse<ResultType>> getAsLiveData() {
         return result;

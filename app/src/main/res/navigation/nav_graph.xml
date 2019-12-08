@@ -1,53 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_fragment">
+    app:startDestination="@id/topHistoryFragment">
+
+    <action android:id="@+id/action_global_artistFragment"
+        app:destination="@id/artistFragment" />
+
+    <action android:id="@+id/action_global_albumFragment"
+        app:destination="@id/albumFragment"/>
+
+    <action android:id="@+id/action_global_playlistFragment"
+        app:destination="@+id/playlistFragment"/>
+
+    <action android:id="@+id/action_global_trackFragment"
+        app:destination="@id/trackDetailsFragment"/>
+
+    <action android:id="@+id/action_global_topHistoryFragment"
+        app:destination="@id/topHistoryFragment"/>
+
+    <action android:id="@+id/action_global_searchFragment"
+        app:destination="@id/searchFragment"/>
+
+    <action android:id="@+id/action_global_libraryFragment"
+        app:destination="@+id/libraryFragment"/>
 
     <fragment
-        android:id="@+id/home_fragment"
-        android:name="com.example.android.androidify.fragments.HomeFragment"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/home_to_artist"
-            app:destination="@+id/artist_fragment"/>
+        android:id="@+id/topHistoryFragment"
+        android:name="com.example.android.androidify.fragments.TopHistoryFragment"
+        android:label="@string/top_history_label"
+        tools:layout="@layout/fragment_top_history">
 
     </fragment>
 
     <fragment
-        android:id="@+id/artist_fragment"
-        android:name="com.example.android.androidify.fragments.ArtistFragment"
-        tools:layout="@layout/fragment_artist">
+        android:id="@+id/artistFragment"
+        android:name="com.example.android.androidify.fragments.artist.ArtistDetailsFragment"
+        tools:layout="@layout/fragment_base_details">
+
         <argument
-            android:name="artist_id"
+            android:name="artistId"
             app:argType="string"/>
 
     </fragment>
 
-    <action
-        android:id="@+id/global_nav_to_artist"
-        app:destination="@id/artist_fragment"/>
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.android.androidify.fragments.details.AlbumFragment"
+        tools:layout="@layout/fragment_base_details">
 
+        <argument
+            android:name="albumId"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/trackDetailsFragment"
+        android:name="com.example.android.androidify.fragments.details.TrackDetailsFragment"
+        tools:layout="@layout/fragment_base_details">
+
+        <argument
+            android:name="trackId"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.android.androidify.fragments.details.PlaylistFragment"
+        tools:layout="@layout/fragment_base_details">
+
+        <argument
+            android:name="playlistId"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.android.androidify.fragments.search.SearchFragment"
+        android:label="@string/search_fragment_label"
+        tools:layout="@layout/fragment_search">
+
+        <argument
+            android:name="searchQuery"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.android.androidify.fragments.library.LibraryFragment"
+        android:label="@string/library_title"
+        tools:layout="@layout/fragment_view_pager">
+
+    </fragment>
 
 </navigation>
-
-<!--
-    <fragment
-        android:id="@+id/top_history_list_fragment"
-        android:name="com.example.android.androidify.fragments.TopHistoryListFragment">
-        <action
-            android:id="@+id/top_history_to_artist"
-            app:destination="@id/artist_fragment"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/artist_gallery_fragment"
-        android:name="com.example.android.androidify.fragments.ArtistGalleryFragment"
-        tools:layout="@layout/fragment_artist_gallery">
-        <action
-            android:id="@+id/artist_gallery_to_new_artist"
-            app:destination="@id/artist_fragment"/>
-    </fragment>
-!-->

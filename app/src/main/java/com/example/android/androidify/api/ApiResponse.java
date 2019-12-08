@@ -28,5 +28,13 @@ public class ApiResponse<T> {
         return new ApiResponse(Status.LOADING, null, null);
     }
 
-    public enum Status { SUCCESS, ERROR, LOADING }
+    public static <T> ApiResponse<T> loading(T data) {
+        return new ApiResponse(Status.LOADING, data, null);
+    }
+
+    public static <T> ApiResponse<T> unauthorized() {
+        return new ApiResponse<>(Status.UNAUTHORIZED, null, null);
+    }
+
+    public enum Status { SUCCESS, ERROR, LOADING, UNAUTHORIZED }
 }

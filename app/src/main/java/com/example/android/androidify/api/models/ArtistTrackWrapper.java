@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ArtistTrackWrapper implements Parcelable {
     public ArrayList<Track> tracks;
 
-    public ArtistTrackWrapper() {};
+    public ArtistTrackWrapper() {}
 
     protected ArtistTrackWrapper(Parcel in) {
         this.tracks = in.createTypedArrayList(Track.CREATOR);

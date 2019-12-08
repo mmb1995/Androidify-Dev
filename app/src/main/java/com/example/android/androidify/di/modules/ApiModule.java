@@ -2,8 +2,8 @@ package com.example.android.androidify.di.modules;
 
 import android.util.Log;
 
+import com.example.android.androidify.api.Session;
 import com.example.android.androidify.api.SpotifyWebService;
-import com.example.android.androidify.repository.LocalStorage;
 
 import javax.inject.Singleton;
 
@@ -19,17 +19,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiModule {
 
     @Provides
-    OkHttpClient provideOkhttpClient(LocalStorage storage) {
-        String accessToken = storage.getAccessToken();
+    OkHttpClient provideOkhttpClient(Session session) {
+        /*String accessToken = session.getAccessToken();*/
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         httpClient.addInterceptor((chain) -> {
             //Log.i("INTERCEPTOR ", accessToken);
-           // Log.i("INTERCEPTOR", chain.toString());
+            // Log.i("INTERCEPTOR", chain.toString());
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder()
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + session.getToken())
                     .method(original.method(), original.body());
 
             Request request = requestBuilder.build();
@@ -39,8 +39,6 @@ public class ApiModule {
             return chain.proceed(request);
         });
         httpClient.addInterceptor(logging);
-        //Log.i("INTERCEPTOR", logging.toString());
-        //Log.i("INTERCEPTOR", httpClient.toString());
         return httpClient.build();
     }
 

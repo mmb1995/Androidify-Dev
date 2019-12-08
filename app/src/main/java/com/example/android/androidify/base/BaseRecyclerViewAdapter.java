@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.example.android.androidify.R;
 import com.example.android.androidify.api.models.Image;
-import com.example.android.androidify.interfaces.OnItemClickListener;
+import com.example.android.androidify.interfaces.MediaItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,10 +21,11 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder> exte
 
     private static final String TAG = "BASE_RV_ADAPTER";
     protected final Context mContext;
-    protected final OnItemClickListener mListener;
+    /*protected final OnItemClickListener mListener;*/
+    protected final MediaItemClickListener mListener;
     protected List<T> mItems;
 
-    public BaseRecyclerViewAdapter(Context context, OnItemClickListener listener) {
+    public BaseRecyclerViewAdapter(Context context, MediaItemClickListener listener) {
         this.mContext = context;
         this.mListener = listener;
     }
@@ -47,7 +48,7 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder> exte
     };
 
     public T getItemAtPosition(int position) {
-        if (mItems != null && position > 0 && position < mItems.size()) {
+        if (mItems != null && position >= 0 && position < mItems.size()) {
             return mItems.get(position);
         }
         return null;

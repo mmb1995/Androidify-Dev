@@ -13,7 +13,7 @@ public class EventObserver<T> implements Observer<Event<T>> {
     public void onChanged(Event<T> tEvent) {
         if (tEvent != null) {
             T data = tEvent.getContentIfNotHandled();
-            if (data != null && onEventChanged != null) {
+            if (onEventChanged != null) {
                 onEventChanged.onHandleEvent(data);
             }
         }

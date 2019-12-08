@@ -22,9 +22,13 @@ public class ImageGalleryViewModel extends ViewModel {
     private LiveData<ApiResponse<List<MusicListItem>>> mRelatedArtists;
     private LiveData<ApiResponse<List<MusicListItem>>> mTopArtists;
     private LiveData<ApiResponse<List<MusicListItem>>> mAlbums;
+    private LiveData<ApiResponse<List<MusicListItem>>> mPlaylists;
+    private LiveData<ApiResponse<List<MusicListItem>>> mSavedTracks;
+    private LiveData<ApiResponse<List<MusicListItem>>> mSavedAlbums;
+    private LiveData<ApiResponse<List<MusicListItem>>> mFollowedArtists;
     private MutableLiveData<String> mRange;
 
-    private SpotifyRepo mRepo;
+    private final SpotifyRepo mRepo;
 
     @Inject
     public ImageGalleryViewModel(SpotifyRepo repo) {
@@ -54,6 +58,39 @@ public class ImageGalleryViewModel extends ViewModel {
         }
 
         return mRelatedArtists;
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getUserPlaylists() {
+        if (mPlaylists == null) {
+            Log.i(TAG, "Getting user playlists");
+            /*mPlaylists = mRepo.getUserPlaylists();*/
+        }
+
+        return mPlaylists;
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getSavedAlbums() {
+        if (mSavedAlbums == null) {
+            /*mSavedAlbums = mRepo.getSavedAlbums();*/
+        }
+
+        return mSavedAlbums;
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getSavedTracks() {
+        if (mSavedTracks == null) {
+            /*mSavedTracks = mRepo.getSavedTracks();*/
+        }
+
+        return mSavedTracks;
+    }
+
+    public LiveData<ApiResponse<List<MusicListItem>>> getFollowedArtists() {
+        if (mFollowedArtists == null) {
+            /*mFollowedArtists = mRepo.getFollowedArtists();*/
+        }
+
+        return mFollowedArtists;
     }
 
     public LiveData<ApiResponse<List<MusicListItem>>> getTopArtists() {

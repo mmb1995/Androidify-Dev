@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/now_playing_card_vertical_guidline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/now_playing_card_vertical_guidline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp"/>
+
+        <com.example.android.androidify.view.MarqueeTextView
+            style="@style/NowPlayingCardText.Title"
+            android:id="@+id/now_playing_card_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_top_guidline"
+            app:layout_constraintStart_toEndOf="@id/now_playing_card_vertical_guidline_start"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_card_vertical_guidline_end"/>
+
+        <TextView
+            style="@style/NowPlayingCardText.Artist"
+            android:id="@+id/now_playing_card_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/now_playing_card_title"
+            app:layout_constraintBottom_toTopOf="@id/card_top_guidline"
+            app:layout_constraintStart_toEndOf="@id/now_playing_card_vertical_guidline_start"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_card_vertical_guidline_end"/>
+
+        <ImageButton
+            style="@style/NowPlayingSelectableButton"
+            android:id="@+id/now_playing_context_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:srcCompat="@drawable/ic_context_menu"
+            app:layout_constraintTop_toTopOf="@id/now_playing_card_title"
+            app:layout_constraintBottom_toBottomOf="@id/now_playing_card_title"
+            app:layout_constraintStart_toEndOf="@id/now_playing_card_vertical_guidline_end"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/card_top_guidline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3"/>
+
+       <com.example.android.androidify.view.MediaPlaybar
+           android:id="@+id/now_playing_playbar"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           app:layout_constraintStart_toStartOf="@id/now_playing_card_vertical_guidline_start"
+           app:layout_constraintEnd_toEndOf="@id/now_playing_card_vertical_guidline_end"
+           app:layout_constraintTop_toBottomOf="@id/card_top_guidline"
+           app:layout_constraintBottom_toTopOf="@id/card_bottom_guidline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/card_bottom_guidline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <ImageButton
+            android:id="@+id/now_playing_shuffle"
+            style="@style/NowPlayingControlButton.Small"
+            app:srcCompat="@drawable/ic_shuffle_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_skip_prev_button"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@id/now_playing_card_vertical_guidline_start"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/now_playing_skip_prev_button"
+            style="@style/NowPlayingControlButton.Normal"
+            app:srcCompat="@drawable/ic_skip_previous_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_playback_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_shuffle"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            style="@style/NowPlayingControlButton.Large"
+            android:id="@+id/now_playing_playback_button"
+            app:srcCompat="@drawable/ic_play_circle_filled"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_skip_next_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_skip_prev_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/now_playing_skip_next_button"
+            style="@style/NowPlayingControlButton.Normal"
+            app:srcCompat="@drawable/ic_skip_next_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_repeat_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_playback_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            style="@style/NowPlayingControlButton.Small"
+            android:id="@+id/now_playing_repeat_button"
+            app:srcCompat="@drawable/ic_repeat_24px"
+            app:layout_constraintEnd_toEndOf="@id/now_playing_card_vertical_guidline_end"
+            app:layout_constraintStart_toEndOf="@id/now_playing_skip_next_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
+<!--
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.android.androidify.view.MarqueeTextView
+            style="@style/NowPlayingCardText.Title"
+            android:id="@+id/now_playing_card_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_top_guidline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            style="@style/NowPlayingCardText.Artist"
+            android:id="@+id/now_playing_card_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/now_playing_card_title"
+            app:layout_constraintBottom_toTopOf="@id/card_top_guidline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/card_top_guidline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3"/>
+
+        <SeekBar
+            style="@style/NowPlayingSeekBar"
+            android:id="@+id/now_playing_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_top_guidline"
+            app:layout_constraintBottom_toTopOf="@id/card_bottom_guidline"/>
+
+        <TextView
+            android:id="@+id/now_playing_time_elapsed"
+            style="@style/NowPlayingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="@id/now_playing_seek_bar"
+            app:layout_constraintTop_toBottomOf="@id/now_playing_seek_bar"/>
+
+        <TextView
+            android:id="@+id/now_playing_duration"
+            style="@style/NowPlayingTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="@id/now_playing_seek_bar"
+            app:layout_constraintTop_toBottomOf="@id/now_playing_seek_bar" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/card_bottom_guidline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <ImageButton
+            android:id="@+id/now_playing_shuffle"
+            style="@style/NowPlayingControlButton.Small"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:src="@drawable/ic_shuffle_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_skip_prev_button"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/now_playing_skip_prev_button"
+            style="@style/NowPlayingControlButton.Normal"
+            android:src="@drawable/ic_skip_previous_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_playback_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_shuffle"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            style="@style/NowPlayingControlButton.Large"
+            android:id="@+id/now_playing_playback_button"
+            android:src="@drawable/ic_play_circle_filled"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_skip_next_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_skip_prev_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/now_playing_skip_next_button"
+            style="@style/NowPlayingControlButton.Normal"
+            android:src="@drawable/ic_skip_next_24px"
+            app:layout_constraintEnd_toStartOf="@id/now_playing_repeat_button"
+            app:layout_constraintStart_toEndOf="@id/now_playing_playback_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/now_playing_repeat_button"
+            style="@style/NowPlayingControlButton.Small"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:src="@drawable/ic_repeat_24px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/now_playing_skip_next_button"
+            app:layout_constraintTop_toBottomOf="@id/card_bottom_guidline"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
+!-->
